@@ -83,6 +83,19 @@ const _abi = [
     type: "event",
   },
   {
+    inputs: [],
+    name: "append",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "bytes16",

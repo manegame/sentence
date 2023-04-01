@@ -6,6 +6,10 @@ export default mudConfig({
       fileSelector: "increment",
       openAccess: true,
     },
+    WriteSystem: {
+      fileSelector: "write",
+      openAccess: true,
+    },
   },
   tables: {
     CounterTable: {
@@ -14,6 +18,14 @@ export default mudConfig({
         value: "uint32",
       },
       storeArgument: true,
+    },
+    SentencesTable: {
+      fileSelector: "sentences",
+      schema: {
+				owner: "address",
+        timestamp: "uint256",
+        sentence: "string"
+      }
     },
   },
   modules: [

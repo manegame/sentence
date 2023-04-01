@@ -4,13 +4,19 @@ import { useMUD } from "./MUDContext";
 
 export const App = () => {
   const {
-    components: { CounterTable },
+    components: { CounterTable, SentencesTable },
     singletonEntity,
     network: { signer },
     worldSend,
   } = useMUD();
 
+  console.log(SentencesTable)
+
   const counter = useComponentValue(CounterTable, singletonEntity);
+
+  const sentence = useComponentValue(SentencesTable, singletonEntity);
+
+  console.log(sentence)
 
   return (
     <>

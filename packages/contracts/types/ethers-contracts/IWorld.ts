@@ -29,6 +29,7 @@ import type {
 
 export interface IWorldInterface extends utils.Interface {
   functions: {
+    "append()": FunctionFragment;
     "call(bytes16,bytes16,bytes)": FunctionFragment;
     "deleteRecord(uint256,bytes32[])": FunctionFragment;
     "deleteRecord(bytes16,bytes16,bytes32[])": FunctionFragment;
@@ -57,6 +58,7 @@ export interface IWorldInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "append"
       | "call"
       | "deleteRecord(uint256,bytes32[])"
       | "deleteRecord(bytes16,bytes16,bytes32[])"
@@ -83,6 +85,7 @@ export interface IWorldInterface extends utils.Interface {
       | "setRecord(uint256,bytes32[],bytes)"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "append", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "call",
     values: [
@@ -237,6 +240,7 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
 
+  decodeFunctionResult(functionFragment: "append", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "call", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "deleteRecord(uint256,bytes32[])",
@@ -394,6 +398,10 @@ export interface IWorld extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    append(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     call(
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
@@ -551,6 +559,10 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  append(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   call(
     namespace: PromiseOrValue<BytesLike>,
@@ -710,6 +722,8 @@ export interface IWorld extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    append(overrides?: CallOverrides): Promise<string>;
+
     call(
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
@@ -899,6 +913,10 @@ export interface IWorld extends BaseContract {
   };
 
   estimateGas: {
+    append(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     call(
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
@@ -1058,6 +1076,10 @@ export interface IWorld extends BaseContract {
   };
 
   populateTransaction: {
+    append(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     call(
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,

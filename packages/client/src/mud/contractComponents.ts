@@ -20,5 +20,22 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    SentencesTable: (() => {
+      const tableId = new TableId("", "sentences");
+      return defineComponent(
+        world,
+        {
+          owner: RecsType.String,
+          timestamp: RecsType.Number,
+          sentence: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
   };
 }
