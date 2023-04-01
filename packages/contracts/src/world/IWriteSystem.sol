@@ -6,5 +6,5 @@ pragma solidity >=0.8.0;
 interface IWriteSystem {
   function append() external returns (string memory);
 
-  function addEntry(string memory sentence) external returns (string memory);
+  function writeSentence(string memory sentence) external returns (string memory);
 }

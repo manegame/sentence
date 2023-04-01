@@ -642,6 +642,25 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "sentence",
+        type: "string",
+      },
+    ],
+    name: "writeSentence",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ] as const;
 
 export class IWorld__factory {
