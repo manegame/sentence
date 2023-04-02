@@ -52,9 +52,9 @@ contract ProposeEntrySystem is System {
       
 
       address worldAddress = _world();
-      bool currentlyVoting = IWorld(worldAddress).getCurrentlyVoting(parentKey);
+      // bool currentlyVoting = IWorld(worldAddress).getCurrentlyVoting(parentKey);
 
-      if(currentlyVoting == false) return false;
+      // if(currentlyVoting == false) return false;
       
       //check if already voted
       for (uint i=0; i < votes.length; i++) {
