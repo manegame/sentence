@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 export const WelcomeModal = () => {
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(true);
 
   return (
     <Backdrop onClick={() => setIsOpen(false)} isVisible={modalIsOpen}>
