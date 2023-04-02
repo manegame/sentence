@@ -5,29 +5,15 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    CounterTable: (() => {
-      const tableId = new TableId("", "counter");
+    ProposedEntry: (() => {
+      const tableId = new TableId("", "proposedentries");
       return defineComponent(
         world,
         {
-          value: RecsType.Number,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHexString(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
-    SentencesTable: (() => {
-      const tableId = new TableId("", "sentences");
-      return defineComponent(
-        world,
-        {
-          owner: RecsType.String,
-          timestamp: RecsType.Number,
-          sentence: RecsType.String,
+          proposedOn: RecsType.BigInt,
+          timestamp: RecsType.BigInt,
+          proposer: RecsType.String,
+          entry: RecsType.String,
         },
         {
           metadata: {

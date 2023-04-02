@@ -2,37 +2,21 @@ import { mudConfig, resolveTableId } from "@latticexyz/cli";
 
 export default mudConfig({
   overrideSystems: {
-    IncrementSystem: {
-      fileSelector: "increment",
-      openAccess: true,
-    },
-    WriteSystem: {
-      fileSelector: "write",
+    ProposeEntrySystem: {
+      fileSelector: "proposalssystem",
       openAccess: true,
     },
   },
   tables: {
-    CounterTable: {
-      fileSelector: "counter",
+    ProposedEntry: {
+      fileSelector: "proposedentries",
       schema: {
-        value: "uint32",
-      },
-      storeArgument: true,
-    },
-    SentencesTable: {
-      fileSelector: "sentences",
-      schema: {
-				owner: "address",
+        proposedOn: "uint256",
         timestamp: "uint256",
-        sentence: "string"
-      }
+        proposer: "address",
+        entry: "string",
+      },
     },
   },
-  modules: [
-    {
-      name: "KeysWithValueModule",
-      root: true,
-      args: [resolveTableId("CounterTable")],
-    },
-  ],
+  modules: [],
 });

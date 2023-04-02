@@ -83,19 +83,6 @@ const _abi = [
     type: "event",
   },
   {
-    inputs: [],
-    name: "append",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "bytes16",
@@ -327,19 +314,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "increment",
-    outputs: [
-      {
-        internalType: "uint32",
-        name: "",
-        type: "uint32",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "contract IModule",
@@ -380,6 +354,25 @@ const _abi = [
     name: "isStore",
     outputs: [],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "entry",
+        type: "string",
+      },
+    ],
+    name: "proposeEntry",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -639,25 +632,6 @@ const _abi = [
     ],
     name: "setRecord",
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "sentence",
-        type: "string",
-      },
-    ],
-    name: "writeSentence",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
     stateMutability: "nonpayable",
     type: "function",
   },

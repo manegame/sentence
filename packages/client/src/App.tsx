@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { Introduction } from "./Introduction";
-import { Write } from "./Write";
-import { Sentences } from "./Sentences";
 
 import { getParameterByName } from "./util";
 import { ShowBlock } from "./BlockCounter";
+import { Proposals } from "./Proposals";
+import { AddProposal } from "./AddProposal";
 
 export const App = () => {
   const [showIntro, setShowIntro] = useState(true);
@@ -25,8 +25,8 @@ export const App = () => {
       ) : (
         <>
           <ShowBlock />
-          <Write />
-          <Sentences />
+          <AddProposal />
+          <Proposals />
         </>
       )}
     </FullHeightDiv>

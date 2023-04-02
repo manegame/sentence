@@ -13,10 +13,7 @@ contract PostDeploy is Script {
     vm.startBroadcast(deployerPrivateKey);
 
     // ------------------ EXAMPLES ------------------
-
-    // Call increment on the world via the registered function selector
-    uint32 newValue = IWorld(worldAddress).increment();
-    console.log("Increment via IWorld:", newValue);
+    // Do automatic things here.
 
     vm.stopBroadcast();
   }
