@@ -21,15 +21,18 @@ export const Proposals = () => {
         {entities.map((ent) => {
           const proposal = getComponentValueStrict(ProposedEntry, ent);
           return (
-            <FlexColumn key={ent}>
-              <div>
-                <p>Proposal: {proposal.entry}</p>
-              </div>
-              <FlexRow>
-                <img src="https://i.pravatar.cc/100" alt="proposer" />
-                <p>Proposer: {proposal.proposer}</p>
+            <FlexColumn key={ent} style={{ marginBottom: 48 }}>
+              <p style={{ marginBottom: 4 }}>Proposed by:</p>
+              <FlexRow style={{ marginBottom: 12 }}>
+                <ProfileImg src="https://i.pravatar.cc/100" alt="proposer" />
+                <p>
+                  <Bold>{proposal.proposer}</Bold>
+                </p>
                 <p></p>
               </FlexRow>
+              <div>
+                <ProposalText>{proposal.entry}</ProposalText>
+              </div>
             </FlexColumn>
           );
         })}
@@ -42,6 +45,13 @@ const Title = styled.h1`
   color: black;
 `;
 
+const ProfileImg = styled.img`
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  margin-right: 8px;
+`;
+
 const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,4 +60,15 @@ const FlexColumn = styled.div`
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+`;
+
+const Bold = styled.span`
+  font-weight: bold;
+  margin: 0px;
+`;
+
+const ProposalText = styled.h3`
+  color: white;
+  margin: 0px;
 `;
