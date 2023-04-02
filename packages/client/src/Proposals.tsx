@@ -7,9 +7,32 @@ import { Has, getComponentValueStrict } from "@latticexyz/recs";
 export const Proposals = () => {
   const {
     components: { ProposedEntry },
+    network: { signer },
+    worldSend,
+    world
   } = useMUD();
 
   const entities = useEntityQuery([Has(ProposedEntry)]);
+
+  const vote = async (key: string) => {
+    // Create a World contract instance
+    const s = signer.get();
+    if (!s) throw new Error("No signer");
+
+    // const convertedKey = key.padEnd(66, "0")
+
+    const tx = await worldSend("vote", [key]);
+
+    // if (inputRef.current) {
+    //   inputRef.current.value = "";
+    // }
+
+    // Reset input value
+
+    console.log("proposeEntry tx", tx);
+    console.log("proposeEntry result", await tx.wait());
+  };
+
 
   return (
     <>
@@ -20,8 +43,13 @@ export const Proposals = () => {
       <ol>
         {entities.map((ent) => {
           const proposal = getComponentValueStrict(ProposedEntry, ent);
+          const entityId = world.entities[ent];
+          console.log(entityId)
           return (
             <FlexColumn key={ent} style={{ marginBottom: 48 }}>
+              <button onClick={() => vote(entityId)}>
+                Vote
+              </button>
               <p style={{ marginBottom: 4 }}>Proposed by:</p>
               <FlexRow style={{ marginBottom: 12 }}>
                 <ProfileImg src="https://i.pravatar.cc/100" alt="proposer" />
@@ -31,7 +59,7 @@ export const Proposals = () => {
                 <p></p>
               </FlexRow>
               <div>
-                <ProposalText>{proposal.entry}</ProposalText>
+                <ProposalText>{proposal.sentence}</ProposalText>
               </div>
             </FlexColumn>
           );

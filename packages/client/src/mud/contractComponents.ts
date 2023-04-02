@@ -5,15 +5,87 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
+    Story: (() => {
+      const tableId = new TableId("", "story");
+      return defineComponent(
+        world,
+        {
+          id: RecsType.BigInt,
+          lastProposalId: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Entry: (() => {
+      const tableId = new TableId("", "entry");
+      return defineComponent(
+        world,
+        {
+          id: RecsType.BigInt,
+          storyId: RecsType.BigInt,
+          parentId: RecsType.BigInt,
+          proposer: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     ProposedEntry: (() => {
       const tableId = new TableId("", "proposedentries");
       return defineComponent(
         world,
         {
-          proposedOn: RecsType.BigInt,
+          id: RecsType.BigInt,
+          storyId: RecsType.BigInt,
+          parentBlock: RecsType.BigInt,
+          proposedOnBlock: RecsType.BigInt,
           timestamp: RecsType.BigInt,
           proposer: RecsType.String,
-          entry: RecsType.String,
+          sentence: RecsType.String,
+          votes: RecsType.StringArray,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    NewEntryPeriod: (() => {
+      const tableId = new TableId("", "newentryperiod");
+      return defineComponent(
+        world,
+        {
+          id: RecsType.BigInt,
+          parentBlock: RecsType.BigInt,
+          periodEndsBlock: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    NewVotePeriod: (() => {
+      const tableId = new TableId("", "newvoteperiod");
+      return defineComponent(
+        world,
+        {
+          id: RecsType.BigInt,
+          parentBlock: RecsType.BigInt,
+          perioSdEndsBlock: RecsType.BigInt,
         },
         {
           metadata: {

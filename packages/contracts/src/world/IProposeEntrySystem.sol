@@ -5,4 +5,6 @@ pragma solidity >=0.8.0;
 
 interface IProposeEntrySystem {
   function proposeEntry(string memory entry) external returns (string memory);
+
+  function vote(bytes32 proposedEntryKey) external returns (bool);
 }
