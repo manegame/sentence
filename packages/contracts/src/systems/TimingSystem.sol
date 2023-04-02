@@ -6,10 +6,9 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { ProposalPeriod } from "../tables/ProposalPeriod.sol";
 
 bytes32 constant SingletonKey = bytes32(uint256(0x060D));
+uint256 constant proposalPeriod = 100;
 
 contract TimingSystem is System {
-  uint256 proposalPeriod = 100;
-
   
   function setProposalTime(bytes32 parentKey) public returns (uint256) {
     uint256 periodEndsBlock = block.number + proposalPeriod;
@@ -18,14 +17,17 @@ contract TimingSystem is System {
       parentKey,
       periodEndsBlock
     );
-
+    console.log("setting proposal period", block.number, periodEndsBlock, proposalPeriod);
     return periodEndsBlock;
   }
 
   function getCurrentlyActive(bytes32 parentKey) public view returns (bool) {
     uint256 currentBlock = block.number;
     uint256 proposalPeriodEnds = ProposalPeriod.get(parentKey);
+
+    console.log("checking currently active", proposalPeriodEnds, currentBlock);
     if (currentBlock < proposalPeriodEnds){
+      console.log("currently active");
       return true;
     }
     else {
