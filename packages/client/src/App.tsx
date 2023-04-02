@@ -11,6 +11,7 @@ import { Archives } from "./new/Archives";
 import { PlayerData } from "./new/PlayerData";
 import { WelcomeModal } from "./new/WelcomeModal";
 import { NewStory } from "./new/NewStory";
+import { NoWorldModal } from "./new/NoWorldModal";
 
 export const App = () => {
   return (
@@ -23,6 +24,7 @@ export const App = () => {
         <Archives />
       </TopFlexRow>
       <WelcomeModal />
+      <NoWorldModal />
     </FullHeightDiv>
   );
 };

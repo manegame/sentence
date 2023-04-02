@@ -8,24 +8,16 @@ export default mudConfig({
     },
   },
   tables: {
-    Story: {
-      fileSelector: "story",
-      schema: {
-        id: "uint256",
-        lastProposalId: "uint256", // should this be last entry id?
-      },
-    },
     Entry: {
       fileSelector: "entry",
       schema: {
-        id: "uint256",
-        storyId: "uint256",
-        parentId: "uint256",
+        parent: "address",
         proposer: "address",
+        sentence: "string",
       },
     },
     ProposedEntry: {
-      fileSelector: "proposedentries",
+      fileSelector: "proposedentry",
       schema: {
         id: "uint256",
         storyId: "uint256",
@@ -37,16 +29,16 @@ export default mudConfig({
         votes: "address[]",
       },
     },
-    NewEntryPeriod: {
-      fileSelector: "newentryperiod",
+    EntryPeriod: {
+      fileSelector: "entryperiod",
       schema: {
         id: "uint256",
         parentBlock: "uint256",
         periodEndsBlock: "uint256",
       },
     },
-    NewVotePeriod: {
-      fileSelector: "newvoteperiod",
+    VotePeriod: {
+      fileSelector: "voteperiod",
       schema: {
         id: "uint256",
         parentBlock: "uint256",

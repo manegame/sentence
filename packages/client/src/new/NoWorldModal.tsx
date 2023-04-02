@@ -1,27 +1,39 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-export const WelcomeModal = () => {
-  const [modalIsOpen, setIsOpen] = useState(false);
+import { useMUD } from "../MUDContext";
+
+export const NoWorldModal = () => {
+  const {
+    network: { signer },
+    worldSend,
+  } = useMUD();
+
+  const [modalIsOpen, setIsOpen] = useState(true);
+
+  const createNewWorld = async () => {
+    const s = signer.get();
+    if (!s) throw new Error("No signer");
+
+    const tx = await worldSend("createStory", []);
+
+    console.log("createStory tx", tx);
+    console.log("createStory result", await tx.wait());
+
+    setIsOpen(false);
+  };
 
   return (
     <Backdrop onClick={() => setIsOpen(false)} isVisible={modalIsOpen}>
-      <Content onClick={(e) => e.stopPropagation()} isVisible={modalIsOpen}>
+      <Content
+        onClick={(e: any) => e.stopPropagation()}
+        isVisible={modalIsOpen}
+      >
         <p>
-          Sentence is an improvisational game to collectively imagine a new
-          world. You play as an observer -- an anthropologist, historian or
-          journalist, describing the laws, rituals and customs that structure
-          this world and make it unique.
-          <br />
-          <br />
-          Every minute, anyone can propose an addition to the world's
-          description. These proposals are then voted on by players, and the
-          winning entry is appended to the narrative, growing the depth and
-          detail of the world.
-          <br />
-          <br />
-          Worlds that don't receive any entries within a minute are archived.
+          there are no current active worlds. click the button below to start a
+          new one
         </p>
+        <button onClick={() => createNewWorld()}>generate new world</button>
       </Content>
     </Backdrop>
   );

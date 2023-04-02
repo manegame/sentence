@@ -5,31 +5,14 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Story: (() => {
-      const tableId = new TableId("", "story");
-      return defineComponent(
-        world,
-        {
-          id: RecsType.BigInt,
-          lastProposalId: RecsType.BigInt,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHexString(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
     Entry: (() => {
       const tableId = new TableId("", "entry");
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          storyId: RecsType.BigInt,
-          parentId: RecsType.BigInt,
+          parent: RecsType.String,
           proposer: RecsType.String,
+          sentence: RecsType.String,
         },
         {
           metadata: {
@@ -40,7 +23,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     ProposedEntry: (() => {
-      const tableId = new TableId("", "proposedentries");
+      const tableId = new TableId("", "proposedentry");
       return defineComponent(
         world,
         {
@@ -61,8 +44,8 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    NewEntryPeriod: (() => {
-      const tableId = new TableId("", "newentryperiod");
+    EntryPeriod: (() => {
+      const tableId = new TableId("", "entryperiod");
       return defineComponent(
         world,
         {
@@ -78,8 +61,8 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    NewVotePeriod: (() => {
-      const tableId = new TableId("", "newvoteperiod");
+    VotePeriod: (() => {
+      const tableId = new TableId("", "voteperiod");
       return defineComponent(
         world,
         {

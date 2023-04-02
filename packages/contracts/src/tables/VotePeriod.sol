@@ -17,22 +17,22 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes16("entry"))));
-uint256 constant EntryTableId = _tableId;
+uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes16("voteperiod"))));
+uint256 constant VotePeriodTableId = _tableId;
 
-struct EntryData {
-  address parent;
-  address proposer;
-  string sentence;
+struct VotePeriodData {
+  uint256 id;
+  uint256 parentBlock;
+  uint256 periodEndsBlock;
 }
 
-library Entry {
+library VotePeriod {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](3);
-    _schema[0] = SchemaType.ADDRESS;
-    _schema[1] = SchemaType.ADDRESS;
-    _schema[2] = SchemaType.STRING;
+    _schema[0] = SchemaType.UINT256;
+    _schema[1] = SchemaType.UINT256;
+    _schema[2] = SchemaType.UINT256;
 
     return SchemaLib.encode(_schema);
   }
@@ -47,10 +47,10 @@ library Entry {
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](3);
-    _fieldNames[0] = "parent";
-    _fieldNames[1] = "proposer";
-    _fieldNames[2] = "sentence";
-    return ("Entry", _fieldNames);
+    _fieldNames[0] = "id";
+    _fieldNames[1] = "parentBlock";
+    _fieldNames[2] = "periodEndsBlock";
+    return ("VotePeriod", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -75,126 +75,110 @@ library Entry {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get parent */
-  function getParent(bytes32 key) internal view returns (address parent) {
+  /** Get id */
+  function getId(bytes32 key) internal view returns (uint256 id) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 0);
-    return (address(Bytes.slice20(_blob, 0)));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get parent (using the specified store) */
-  function getParent(IStore _store, bytes32 key) internal view returns (address parent) {
+  /** Get id (using the specified store) */
+  function getId(IStore _store, bytes32 key) internal view returns (uint256 id) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 0);
-    return (address(Bytes.slice20(_blob, 0)));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set parent */
-  function setParent(bytes32 key, address parent) internal {
+  /** Set id */
+  function setId(bytes32 key, uint256 id) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((parent)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
   }
 
-  /** Set parent (using the specified store) */
-  function setParent(IStore _store, bytes32 key, address parent) internal {
+  /** Set id (using the specified store) */
+  function setId(IStore _store, bytes32 key, uint256 id) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((parent)));
+    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
   }
 
-  /** Get proposer */
-  function getProposer(bytes32 key) internal view returns (address proposer) {
+  /** Get parentBlock */
+  function getParentBlock(bytes32 key) internal view returns (uint256 parentBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
-    return (address(Bytes.slice20(_blob, 0)));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get proposer (using the specified store) */
-  function getProposer(IStore _store, bytes32 key) internal view returns (address proposer) {
+  /** Get parentBlock (using the specified store) */
+  function getParentBlock(IStore _store, bytes32 key) internal view returns (uint256 parentBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
-    return (address(Bytes.slice20(_blob, 0)));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set proposer */
-  function setProposer(bytes32 key, address proposer) internal {
+  /** Set parentBlock */
+  function setParentBlock(bytes32 key, uint256 parentBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((proposer)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((parentBlock)));
   }
 
-  /** Set proposer (using the specified store) */
-  function setProposer(IStore _store, bytes32 key, address proposer) internal {
+  /** Set parentBlock (using the specified store) */
+  function setParentBlock(IStore _store, bytes32 key, uint256 parentBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((proposer)));
+    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((parentBlock)));
   }
 
-  /** Get sentence */
-  function getSentence(bytes32 key) internal view returns (string memory sentence) {
+  /** Get periodEndsBlock */
+  function getPeriodEndsBlock(bytes32 key) internal view returns (uint256 periodEndsBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 2);
-    return (string(_blob));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get sentence (using the specified store) */
-  function getSentence(IStore _store, bytes32 key) internal view returns (string memory sentence) {
+  /** Get periodEndsBlock (using the specified store) */
+  function getPeriodEndsBlock(IStore _store, bytes32 key) internal view returns (uint256 periodEndsBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 2);
-    return (string(_blob));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set sentence */
-  function setSentence(bytes32 key, string memory sentence) internal {
+  /** Set periodEndsBlock */
+  function setPeriodEndsBlock(bytes32 key, uint256 periodEndsBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 2, bytes((sentence)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((periodEndsBlock)));
   }
 
-  /** Set sentence (using the specified store) */
-  function setSentence(IStore _store, bytes32 key, string memory sentence) internal {
+  /** Set periodEndsBlock (using the specified store) */
+  function setPeriodEndsBlock(IStore _store, bytes32 key, uint256 periodEndsBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 2, bytes((sentence)));
-  }
-
-  /** Push a slice to sentence */
-  function pushSentence(bytes32 key, string memory _slice) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    StoreSwitch.pushToField(_tableId, _primaryKeys, 2, bytes((_slice)));
-  }
-
-  /** Push a slice to sentence (using the specified store) */
-  function pushSentence(IStore _store, bytes32 key, string memory _slice) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    _store.pushToField(_tableId, _primaryKeys, 2, bytes((_slice)));
+    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((periodEndsBlock)));
   }
 
   /** Get the full data */
-  function get(bytes32 key) internal view returns (EntryData memory _table) {
+  function get(bytes32 key) internal view returns (VotePeriodData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -203,7 +187,7 @@ library Entry {
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (EntryData memory _table) {
+  function get(IStore _store, bytes32 key) internal view returns (VotePeriodData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -212,8 +196,8 @@ library Entry {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, address parent, address proposer, string memory sentence) internal {
-    bytes memory _data = encode(parent, proposer, sentence);
+  function set(bytes32 key, uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal {
+    bytes memory _data = encode(id, parentBlock, periodEndsBlock);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -222,8 +206,8 @@ library Entry {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, address parent, address proposer, string memory sentence) internal {
-    bytes memory _data = encode(parent, proposer, sentence);
+  function set(IStore _store, bytes32 key, uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal {
+    bytes memory _data = encode(id, parentBlock, periodEndsBlock);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -232,39 +216,27 @@ library Entry {
   }
 
   /** Set the full data using the data struct */
-  function set(bytes32 key, EntryData memory _table) internal {
-    set(key, _table.parent, _table.proposer, _table.sentence);
+  function set(bytes32 key, VotePeriodData memory _table) internal {
+    set(key, _table.id, _table.parentBlock, _table.periodEndsBlock);
   }
 
   /** Set the full data using the data struct (using the specified store) */
-  function set(IStore _store, bytes32 key, EntryData memory _table) internal {
-    set(_store, key, _table.parent, _table.proposer, _table.sentence);
+  function set(IStore _store, bytes32 key, VotePeriodData memory _table) internal {
+    set(_store, key, _table.id, _table.parentBlock, _table.periodEndsBlock);
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal view returns (EntryData memory _table) {
-    // 40 is the total byte length of static data
-    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 40));
+  function decode(bytes memory _blob) internal pure returns (VotePeriodData memory _table) {
+    _table.id = (uint256(Bytes.slice32(_blob, 0)));
 
-    _table.parent = (address(Bytes.slice20(_blob, 0)));
+    _table.parentBlock = (uint256(Bytes.slice32(_blob, 32)));
 
-    _table.proposer = (address(Bytes.slice20(_blob, 20)));
-
-    uint256 _start;
-    uint256 _end = 72;
-
-    _start = _end;
-    _end += _encodedLengths.atIndex(0);
-    _table.sentence = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+    _table.periodEndsBlock = (uint256(Bytes.slice32(_blob, 64)));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(address parent, address proposer, string memory sentence) internal view returns (bytes memory) {
-    uint16[] memory _counters = new uint16[](1);
-    _counters[0] = uint16(bytes(sentence).length);
-    PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
-
-    return abi.encodePacked(parent, proposer, _encodedLengths.unwrap(), bytes((sentence)));
+  function encode(uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal view returns (bytes memory) {
+    return abi.encodePacked(id, parentBlock, periodEndsBlock);
   }
 
   /* Delete all data for given keys */

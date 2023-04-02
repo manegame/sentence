@@ -1,3 +1,4 @@
+import { EntityIndex } from "@latticexyz/recs";
 import { ReactNode } from "react";
 import styled from "styled-components";
 
@@ -6,9 +7,9 @@ export const Story = ({
   entries,
   children,
 }: {
-  worldName: string;
+  worldName: EntityIndex;
   entries: string[];
-  children: ReactNode;
+  children?: ReactNode;
 }) => (
   <StoryWrapper>
     <h1>world {worldName}</h1>

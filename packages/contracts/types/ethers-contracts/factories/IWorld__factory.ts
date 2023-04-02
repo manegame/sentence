@@ -112,6 +112,13 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "createStory",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
