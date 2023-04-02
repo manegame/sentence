@@ -22,6 +22,20 @@ contract TimingSystem is System {
     return periodEndsBlock;
   }
 
+  function getCurrentlyActive(bytes32 parentKey) public view returns (bool) {
+    uint256 currentBlock = block.number;
+    uint256 proposalPeriodEnds = ProposalPeriod.get(parentKey);
+    if (currentBlock < proposalPeriodEnds){
+      return true;
+    }
+    else {
+      return false;
+    }
+    //get the block number of the entity being voted/proposed on
+    //return whether we are in the voting period for that entity
+  }
+
+
   // function setVotingTime(bytes32 parentKey) public returns (uint256) {
   //   //bytes32 key = bytes32(abi.encodePacked(block.number, msg.sender, gasleft())); // creating a random key for the record
 

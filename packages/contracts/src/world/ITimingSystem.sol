@@ -6,9 +6,5 @@ pragma solidity >=0.8.0;
 interface ITimingSystem {
   function setProposalTime(bytes32 parentKey) external returns (uint256);
 
-  function setVotingTime(bytes32 parentKey) external returns (uint256);
-
-  function getCurrentlyVoting(bytes32 parentKey) external returns (bool);
-
-  function getCurrentlyProposing(bytes32 parentKey) external returns (bool);
+  function getCurrentlyActive(bytes32 parentKey) external returns (bool);
 }

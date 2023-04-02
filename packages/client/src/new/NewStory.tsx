@@ -53,7 +53,7 @@ export const NewStory = () => {
     <FlexColumn>
       <h1 style={{ marginBottom: 24 }}>Current World</h1>
       <Story worldName={story?.key} entries={[story?.sentence]}>
-        <Composer />
+        <Composer parentEntryKey={story?.key}/>
         {/* Would be good to show some loading stuff here/handle empty case. */}
         {proposedEntries.length ? (
           proposedEntries.map((proposals) => {

@@ -6,7 +6,7 @@ pragma solidity >=0.8.0;
 import { ProposedEntryData } from "./../systems/ProposeEntrySystem.sol";
 
 interface IProposeEntrySystem {
-  function proposeEntry(string memory entry) external returns (string memory);
+  function proposeEntry(bytes32 parentKey, string memory entry) external returns (string memory);
 
   function vote(bytes32 proposedEntryKey) external returns (bool);
 
