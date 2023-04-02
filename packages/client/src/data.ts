@@ -1,0 +1,33 @@
+export const DUMMY_STORIES = {
+  0: [
+    "Imagine a nation based upon water...",
+    "Everyone hoards plastic bottles",
+    "when you go outside you have to wear a raincoat",
+    "there is a law that you always need to be damp",
+    "Imagine a nation based upon water...",
+    "Everyone hoards plastic bottles",
+    "when you go outside you have to wear a raincoat",
+    "there is a law that you always need to be damp",
+    "Imagine a nation based upon water...",
+    "Everyone hoards plastic bottles",
+    "when you go outside you have to wear a raincoat",
+    "there is a law that you always need to be damp",
+  ],
+  1: [
+    "Imagine a nation based upon water...",
+    "Everyone hoards plastic bottles",
+    "when you go outside you have to wear a raincoat",
+    "there is a law that you always need to be damp",
+    "Imagine a nation based upon water...",
+    "Everyone hoards plastic bottles",
+    "when you go outside you have to wear a raincoat",
+    "there is a law that you always need to be damp",
+  ],
+  2: [
+    "Imagine a nation based upon water...",
+    "Everyone hoards plastic bottles",
+    "when you go outside you have to wear a raincoat",
+    "there is a law that you always need to be damp",
+    "Imagine a nation based upon water...",
+  ],
+};
