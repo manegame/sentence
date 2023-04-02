@@ -27,7 +27,7 @@ export const Proposals = () => {
               </div>
               <FlexRow>
                 <img src="https://i.pravatar.cc/100" alt="proposer" />
-                <p>Proposer: ${proposal.proposer}</p>
+                <p>Proposer: {proposal.proposer}</p>
                 <p></p>
               </FlexRow>
             </FlexColumn>
