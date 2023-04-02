@@ -12,6 +12,7 @@ import { VotableEntry } from "./VotableEntry";
 export const NewStory = () => {
   const {
     components: { ProposedEntry },
+    world
   } = useMUD();
 
   const entities = useEntityQuery([Has(ProposedEntry)]);
@@ -34,7 +35,8 @@ export const NewStory = () => {
         {entities.length ? (
           entities.map((ent) => {
             const proposal = getComponentValueStrict(ProposedEntry, ent);
-            return <VotableEntry entry={proposal.sentence} />;
+            const entityId = world.entities[ent];
+            return <VotableEntry key={entityId} entry={proposal.sentence} votes={proposal.votes.length} entityId={entityId} />;
           })
         ) : (
           <></>

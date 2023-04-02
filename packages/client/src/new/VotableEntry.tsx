@@ -1,25 +1,37 @@
 import styled from "styled-components";
 import { useMUD } from "../MUDContext";
 
-export const VotableEntry = ({ entry }: { entry: string }) => {
+export const VotableEntry = ({ entry, entityId, votes }: { entry: string, entityId: string, votes: number }) => {
   const {
     network: { signer },
     worldSend,
+    world
   } = useMUD();
 
-  const vote = (vote: number) => {
-    // submit transactions here to vote.
-    // handle edge cases here.
-    console.log(vote);
-    return;
+  const vote = async () => {
+    // Create a World contract instance
+    const s = signer.get();
+    if (!s) throw new Error("No signer");
+
+    // const convertedKey = key.padEnd(66, "0")
+
+    const tx = await worldSend("vote", [entityId]);
+
+    // if (inputRef.current) {
+    //   inputRef.current.value = "";
+    // }
+
+    // Reset input value
+
+    console.log("proposeEntry tx", tx);
+    console.log("proposeEntry result", await tx.wait());
   };
   return (
     <ProposedEntryContainer>
       <VotingContainer>
-        <Clickable onClick={() => vote(1)}>+</Clickable>
-        <Clickable onClick={() => vote(-1)}>-</Clickable>
+        <Clickable onClick={vote}>+</Clickable>
       </VotingContainer>
-      <TextContainer>{entry}</TextContainer>
+      <TextContainer>{entry} ({votes})</TextContainer>
     </ProposedEntryContainer>
   );
 };

@@ -211,6 +211,25 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
+        name: "arrayLength",
+        type: "uint256",
+      },
+    ],
+    name: "getRandomIndex",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "table",
         type: "uint256",
       },
@@ -317,6 +336,30 @@ const _abi = [
     ],
     name: "grantAccess",
     outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "arr",
+        type: "address[]",
+      },
+      {
+        internalType: "address",
+        name: "val",
+        type: "address",
+      },
+    ],
+    name: "includesAddress",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },
