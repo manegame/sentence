@@ -8,6 +8,16 @@ import { ProposedEntry, ProposedEntryData } from "../tables/ProposedEntry.sol";
 bytes32 constant SingletonKey = bytes32(uint256(0x060D));
 
 contract ProposeEntrySystem is System {
+
+  function includesAddress (address[] memory arr, address val) public pure returns (bool) {
+      for (uint i = 0; i < arr.length; i++) {
+          if (arr[i] == val) {
+              return true;
+          }
+      }
+      return false;
+  }
+
   function proposeEntry(string memory entry) public returns (string memory) {
     address owner = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
 
@@ -30,29 +40,15 @@ contract ProposeEntrySystem is System {
     return entry;
   }
 
-  function vote(bytes32 proposedEntryKey) public view returns (bool) {
-      ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
-      address[] memory votes = entry.votes;
-
+  function vote(bytes32 proposedEntryKey) public returns (bool) {
       address sender = _msgSender();
-      
-      // bool hasAlreadyVoted = false;
-          
-      // for (uint i=0; i < votes.length; i++) {
-      //     if (sender == votes[i]) {
-      //         hasAlreadyVoted = true;
-      //         return false;
-      //     }
-      // }
 
-      address[] memory newvotes = new address[](votes.length + 1);
+      address[] memory votes = ProposedEntry.getVotes(proposedEntryKey);
 
-      for (uint i=0; i < votes.length; i++) {
-          newvotes[i] = votes[i];
-      }
+      // IS sender in votes?
+      if (includesAddress(votes, sender)) return false;
 
-      newvotes[votes.length + 1] = sender;
-
+      ProposedEntry.pushVotes(proposedEntryKey, sender);
       return true;
   }
 }

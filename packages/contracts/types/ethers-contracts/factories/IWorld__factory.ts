@@ -316,6 +316,30 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address[]",
+        name: "arr",
+        type: "address[]",
+      },
+      {
+        internalType: "address",
+        name: "val",
+        type: "address",
+      },
+    ],
+    name: "includesAddress",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "contract IModule",
         name: "module",
         type: "address",

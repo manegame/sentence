@@ -18,7 +18,7 @@ export const Archives = () => {
       {Object.keys(archivedStories)
         .reverse()
         .map((worldName, i) => (
-          <Story worldName={worldName} entries={archivedStories[i]} />
+          <Story key={i} worldName={worldName} entries={archivedStories[i]} />
         ))}
     </ArchivesWrapper>
   );
