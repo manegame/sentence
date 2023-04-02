@@ -22,17 +22,43 @@ contract FirstEntrySystem is System {
         
         // Create Story
         Story.set(storyKey, false);
-    
+      // storyBeginnings = new string[](29);
+        
         // Create first Entry of Story
         // TODO: Add more prompts
-        string[] memory storyBeginnings = new string[](5);
-        storyBeginnings[0] = "The story so far: in the beginning, the universe was created. This has made a lot of people very angry and been widely regarded as a bad move.";
-        storyBeginnings[1] = "Mother died today. Or maybe, yesterday; I can't be sure.";
-        storyBeginnings[2] = "Ships at a distance have every man's wish on board.";
-        storyBeginnings[3] = "It was a bright cold day in April, and the clocks were striking thirteen.";
-        storyBeginnings[4] = "Imagine a nation based upon water...";
+        string[29] memory storyBeginnings = [
+          "The most vital thing in this world is money",
+          "The most signifiant thing in this society is magic",
+          "The most important thing in this group is secrets",
+          "This culture is based upon angels",
+          "The most essential thing in this group is angels",
+          "The most important thing in this society is nature",
+          "This civilization is solely reliant on the horizontal",
+          "This group is built on money",
+          "The most essential thing in this society is water",
+          "The most important thing in this civilization is agriculture",
+          "This culture is organised around mining",
+          "The most valuable thing in this civilization is science",
+          "This society is structured around the vertical",
+          "The most valuable thing in this civilization is angels",
+          "This group is organised around water",
+          "The most vital thing in this society is nature",
+          "This world is based upon hardness",
+          "This civilization is determined by agriculture",
+          "This group is based upon hardness",
+          "The most valuable thing in this society is hardness",
+          "The most vital thing in this culture is transparency",
+          "This culture is organised around secrets",
+          "The most essential thing in this group is softness",
+          "The most vital thing in this world is mystery",
+          "This society is based upon agriculture",
+          "The most valuable thing in this group is espionage",
+          "The most vital thing in this society is drama",
+          "The most important thing in this group is angels",
+          "This group is determined by drama"
+        ];
 
-        string memory sentence = storyBeginnings[getRandomIndex(5)];
+        string memory sentence = storyBeginnings[getRandomIndex(29)];
 
         // Uh can we use storyKey here instead?
         bytes32 entryKey = bytes32(keccak256(abi.encodePacked(block.number, storyKey, proposer, gasleft()))); // creating a random key for the record
