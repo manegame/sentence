@@ -1,8 +1,9 @@
 body {
   margin: 0;
+  background: white;
 }
 
 p {
-  color: white;
+  color: black;
   margin: 0px;
 }

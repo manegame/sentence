@@ -36,5 +36,5 @@ export const App = () => {
 const FullHeightDiv = styled.div`
   position: relative;
   height: 100vh;
-  background: black;
+  color: black;
 `;

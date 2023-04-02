@@ -39,7 +39,7 @@ export const Proposals = () => {
 };
 
 const Title = styled.h1`
-  color: white;
+  color: black;
 `;
 
 const FlexColumn = styled.div`
