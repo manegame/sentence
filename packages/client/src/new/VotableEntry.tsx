@@ -1,23 +1,41 @@
 import styled from "styled-components";
 import { useMUD } from "../MUDContext";
+import { EntityID, EntityIndex, Has } from "@latticexyz/recs";
+import { useEntityQuery } from "@latticexyz/react";
 
-export const VotableEntry = ({ entry }: { entry: string }) => {
+export const VotableEntry = ({
+  proposalKey,
+  entry,
+  votes,
+}: {
+  proposalKey: EntityID;
+  entry: string;
+  votes: number;
+}) => {
   const {
     network: { signer },
     worldSend,
   } = useMUD();
 
-  const vote = (vote: number) => {
+  const vote = async () => {
     // submit transactions here to vote.
     // handle edge cases here.
-    console.log(vote);
+    const s = signer.get();
+    if (!s) throw new Error("No signer");
+
+    const tx = await worldSend("vote", [proposalKey]);
+
+    console.log("vote tx", tx);
+    console.log("vote result", await tx.wait());
+
     return;
   };
+
   return (
     <ProposedEntryContainer>
       <VotingContainer>
-        <Clickable onClick={() => vote(1)}>+</Clickable>
-        <p>(0)</p>
+        <Clickable onClick={vote}>+</Clickable>
+        <p>({votes})</p>
       </VotingContainer>
       <TextContainer>{entry}</TextContainer>
     </ProposedEntryContainer>

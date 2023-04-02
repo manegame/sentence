@@ -45,36 +45,37 @@ contract ProposeEntrySystem is System {
 
   function vote(bytes32 proposedEntryKey) public returns (bool) {
 
-    //check whether in a current valid voting period
+      //check whether in a current valid voting period
 
-      ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
-      address[] memory votes = entry.votes;
-      bytes32 parentKey = entry.parentKey;
+      // ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
+      // address[] memory votes = entry.votes;
+      // bytes32 parentKey = entry.parentKey;
 
       address sender = _msgSender();
       
 
-      address worldAddress = _world();
-      bool currentlyVoting = IWorld(worldAddress).getCurrentlyActive(parentKey);
+      // address worldAddress = _world();
+      // bool currentlyVoting = IWorld(worldAddress).getCurrentlyActive(parentKey);
 
-      if(currentlyVoting == false) return false;
+      // if(currentlyVoting == false) return false;
       
       //check if already voted
-      for (uint i=0; i < votes.length; i++) {
-          if (sender == votes[i]) {
-              return false;
-          }
-      }
+      // ProposedEntry.getVotes()
+      // for (uint i=0; i < votes.length; i++) {
+      //     if (sender == votes[i]) {
+      //         return false;
+      //     }
+      // }
 
-      address[] memory newvotes = new address[](votes.length + 1);
+      // address[] memory newvotes = new address[](votes.length + 1);
 
-      for (uint i=0; i < votes.length; i++) {
-          newvotes[i] = votes[i];
-      }
+      // for (uint i=0; i < votes.length; i++) {
+      //     newvotes[i] = votes[i];
+      // }
 
-      newvotes[votes.length + 1] = sender;
+      // newvotes[votes.length + 1] = sender;
 
-      ProposedEntry.setVotes(proposedEntryKey, newvotes);
+      ProposedEntry.pushVotes(proposedEntryKey, sender);
 
       return true;
   }
