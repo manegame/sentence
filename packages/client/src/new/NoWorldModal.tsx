@@ -16,11 +16,10 @@ export const NoWorldModal = () => {
     if (!s) throw new Error("No signer");
 
     const tx = await worldSend("createStory", []);
+    setIsOpen(false);
 
     console.log("createStory tx", tx);
     console.log("createStory result", await tx.wait());
-
-    setIsOpen(false);
   };
 
   return (
@@ -32,7 +31,9 @@ export const NoWorldModal = () => {
         <p style={{ marginBottom: 24 }}>
           there are no current active sentences.
         </p>
-        <button style={{fontSize: 16}} onClick={() => createNewWorld()}>New sentence</button>
+        <button style={{ fontSize: 16 }} onClick={() => createNewWorld()}>
+          New sentence
+        </button>
       </Content>
     </Backdrop>
   );
