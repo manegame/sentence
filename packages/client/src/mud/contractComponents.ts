@@ -85,7 +85,7 @@ export function defineContractComponents(world: World) {
         {
           id: RecsType.BigInt,
           parentBlock: RecsType.BigInt,
-          perioSdEndsBlock: RecsType.BigInt,
+          periodEndsBlock: RecsType.BigInt,
         },
         {
           metadata: {

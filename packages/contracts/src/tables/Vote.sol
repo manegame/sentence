@@ -17,22 +17,22 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes16("newvoteperiod"))));
-uint256 constant NewVotePeriodTableId = _tableId;
+uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes16("vote"))));
+uint256 constant VoteTableId = _tableId;
 
-struct NewVotePeriodData {
+struct VoteData {
   uint256 id;
-  uint256 parentBlock;
-  uint256 periodEndsBlock;
+  uint256 proposedEntryId;
+  address voter;
 }
 
-library NewVotePeriod {
+library Vote {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](3);
     _schema[0] = SchemaType.UINT256;
     _schema[1] = SchemaType.UINT256;
-    _schema[2] = SchemaType.UINT256;
+    _schema[2] = SchemaType.ADDRESS;
 
     return SchemaLib.encode(_schema);
   }
@@ -48,9 +48,9 @@ library NewVotePeriod {
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](3);
     _fieldNames[0] = "id";
-    _fieldNames[1] = "parentBlock";
-    _fieldNames[2] = "periodEndsBlock";
-    return ("NewVotePeriod", _fieldNames);
+    _fieldNames[1] = "proposedEntryId";
+    _fieldNames[2] = "voter";
+    return ("Vote", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -109,8 +109,8 @@ library NewVotePeriod {
     _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
   }
 
-  /** Get parentBlock */
-  function getParentBlock(bytes32 key) internal view returns (uint256 parentBlock) {
+  /** Get proposedEntryId */
+  function getProposedEntryId(bytes32 key) internal view returns (uint256 proposedEntryId) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -118,8 +118,8 @@ library NewVotePeriod {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get parentBlock (using the specified store) */
-  function getParentBlock(IStore _store, bytes32 key) internal view returns (uint256 parentBlock) {
+  /** Get proposedEntryId (using the specified store) */
+  function getProposedEntryId(IStore _store, bytes32 key) internal view returns (uint256 proposedEntryId) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -127,58 +127,58 @@ library NewVotePeriod {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set parentBlock */
-  function setParentBlock(bytes32 key, uint256 parentBlock) internal {
+  /** Set proposedEntryId */
+  function setProposedEntryId(bytes32 key, uint256 proposedEntryId) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((parentBlock)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((proposedEntryId)));
   }
 
-  /** Set parentBlock (using the specified store) */
-  function setParentBlock(IStore _store, bytes32 key, uint256 parentBlock) internal {
+  /** Set proposedEntryId (using the specified store) */
+  function setProposedEntryId(IStore _store, bytes32 key, uint256 proposedEntryId) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((parentBlock)));
+    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((proposedEntryId)));
   }
 
-  /** Get periodEndsBlock */
-  function getPeriodEndsBlock(bytes32 key) internal view returns (uint256 periodEndsBlock) {
+  /** Get voter */
+  function getVoter(bytes32 key) internal view returns (address voter) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 2);
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (address(Bytes.slice20(_blob, 0)));
   }
 
-  /** Get periodEndsBlock (using the specified store) */
-  function getPeriodEndsBlock(IStore _store, bytes32 key) internal view returns (uint256 periodEndsBlock) {
+  /** Get voter (using the specified store) */
+  function getVoter(IStore _store, bytes32 key) internal view returns (address voter) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 2);
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (address(Bytes.slice20(_blob, 0)));
   }
 
-  /** Set periodEndsBlock */
-  function setPeriodEndsBlock(bytes32 key, uint256 periodEndsBlock) internal {
+  /** Set voter */
+  function setVoter(bytes32 key, address voter) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((periodEndsBlock)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((voter)));
   }
 
-  /** Set periodEndsBlock (using the specified store) */
-  function setPeriodEndsBlock(IStore _store, bytes32 key, uint256 periodEndsBlock) internal {
+  /** Set voter (using the specified store) */
+  function setVoter(IStore _store, bytes32 key, address voter) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((periodEndsBlock)));
+    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((voter)));
   }
 
   /** Get the full data */
-  function get(bytes32 key) internal view returns (NewVotePeriodData memory _table) {
+  function get(bytes32 key) internal view returns (VoteData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -187,7 +187,7 @@ library NewVotePeriod {
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (NewVotePeriodData memory _table) {
+  function get(IStore _store, bytes32 key) internal view returns (VoteData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -196,8 +196,8 @@ library NewVotePeriod {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal {
-    bytes memory _data = encode(id, parentBlock, periodEndsBlock);
+  function set(bytes32 key, uint256 id, uint256 proposedEntryId, address voter) internal {
+    bytes memory _data = encode(id, proposedEntryId, voter);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -206,8 +206,8 @@ library NewVotePeriod {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal {
-    bytes memory _data = encode(id, parentBlock, periodEndsBlock);
+  function set(IStore _store, bytes32 key, uint256 id, uint256 proposedEntryId, address voter) internal {
+    bytes memory _data = encode(id, proposedEntryId, voter);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -216,27 +216,27 @@ library NewVotePeriod {
   }
 
   /** Set the full data using the data struct */
-  function set(bytes32 key, NewVotePeriodData memory _table) internal {
-    set(key, _table.id, _table.parentBlock, _table.periodEndsBlock);
+  function set(bytes32 key, VoteData memory _table) internal {
+    set(key, _table.id, _table.proposedEntryId, _table.voter);
   }
 
   /** Set the full data using the data struct (using the specified store) */
-  function set(IStore _store, bytes32 key, NewVotePeriodData memory _table) internal {
-    set(_store, key, _table.id, _table.parentBlock, _table.periodEndsBlock);
+  function set(IStore _store, bytes32 key, VoteData memory _table) internal {
+    set(_store, key, _table.id, _table.proposedEntryId, _table.voter);
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal pure returns (NewVotePeriodData memory _table) {
+  function decode(bytes memory _blob) internal pure returns (VoteData memory _table) {
     _table.id = (uint256(Bytes.slice32(_blob, 0)));
 
-    _table.parentBlock = (uint256(Bytes.slice32(_blob, 32)));
+    _table.proposedEntryId = (uint256(Bytes.slice32(_blob, 32)));
 
-    _table.periodEndsBlock = (uint256(Bytes.slice32(_blob, 64)));
+    _table.voter = (address(Bytes.slice20(_blob, 64)));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal view returns (bytes memory) {
-    return abi.encodePacked(id, parentBlock, periodEndsBlock);
+  function encode(uint256 id, uint256 proposedEntryId, address voter) internal view returns (bytes memory) {
+    return abi.encodePacked(id, proposedEntryId, voter);
   }
 
   /* Delete all data for given keys */
