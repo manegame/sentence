@@ -59,8 +59,7 @@ export interface IWorldInterface extends utils.Interface {
     "createStory()": FunctionFragment;
     "deleteRecord(uint256,bytes32[])": FunctionFragment;
     "deleteRecord(bytes16,bytes16,bytes32[])": FunctionFragment;
-    "getCurrentlyProposing(bytes32)": FunctionFragment;
-    "getCurrentlyVoting(bytes32)": FunctionFragment;
+    "getCurrentlyActive(bytes32)": FunctionFragment;
     "getField(uint256,bytes32[],uint8)": FunctionFragment;
     "getKeySchema(uint256)": FunctionFragment;
     "getRandomIndex(uint256)": FunctionFragment;
@@ -69,11 +68,10 @@ export interface IWorldInterface extends utils.Interface {
     "getSchema(uint256)": FunctionFragment;
     "grantAccess(bytes16,address)": FunctionFragment;
     "grantAccess(bytes16,bytes16,address)": FunctionFragment;
-    "includesAddress(address[],address)": FunctionFragment;
     "installModule(address,bytes)": FunctionFragment;
     "installRootModule(address,bytes)": FunctionFragment;
     "isStore()": FunctionFragment;
-    "proposeEntry(string)": FunctionFragment;
+    "proposeEntry(bytes32,string)": FunctionFragment;
     "pushToField(uint256,bytes32[],uint8,bytes)": FunctionFragment;
     "pushToField(bytes16,bytes16,bytes32[],uint8,bytes)": FunctionFragment;
     "registerSchema(uint256,bytes32,bytes32)": FunctionFragment;
@@ -85,7 +83,6 @@ export interface IWorldInterface extends utils.Interface {
     "setProposalTime(bytes32)": FunctionFragment;
     "setRecord(bytes16,bytes16,bytes32[],bytes)": FunctionFragment;
     "setRecord(uint256,bytes32[],bytes)": FunctionFragment;
-    "setVotingTime(bytes32)": FunctionFragment;
     "vote(bytes32)": FunctionFragment;
   };
 
@@ -96,8 +93,7 @@ export interface IWorldInterface extends utils.Interface {
       | "createStory"
       | "deleteRecord(uint256,bytes32[])"
       | "deleteRecord(bytes16,bytes16,bytes32[])"
-      | "getCurrentlyProposing"
-      | "getCurrentlyVoting"
+      | "getCurrentlyActive"
       | "getField"
       | "getKeySchema"
       | "getRandomIndex"
@@ -106,7 +102,6 @@ export interface IWorldInterface extends utils.Interface {
       | "getSchema"
       | "grantAccess(bytes16,address)"
       | "grantAccess(bytes16,bytes16,address)"
-      | "includesAddress"
       | "installModule"
       | "installRootModule"
       | "isStore"
@@ -122,7 +117,6 @@ export interface IWorldInterface extends utils.Interface {
       | "setProposalTime"
       | "setRecord(bytes16,bytes16,bytes32[],bytes)"
       | "setRecord(uint256,bytes32[],bytes)"
-      | "setVotingTime"
       | "vote"
   ): FunctionFragment;
 
@@ -155,11 +149,7 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "getCurrentlyProposing",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCurrentlyVoting",
+    functionFragment: "getCurrentlyActive",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
@@ -207,10 +197,6 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "includesAddress",
-    values: [PromiseOrValue<string>[], PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "installModule",
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
@@ -221,7 +207,7 @@ export interface IWorldInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "isStore", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "proposeEntry",
-    values: [PromiseOrValue<string>]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "pushToField(uint256,bytes32[],uint8,bytes)",
@@ -311,10 +297,6 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "setVotingTime",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "vote",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -334,11 +316,7 @@ export interface IWorldInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCurrentlyProposing",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCurrentlyVoting",
+    functionFragment: "getCurrentlyActive",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getField", data: BytesLike): Result;
@@ -365,10 +343,6 @@ export interface IWorldInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "grantAccess(bytes16,bytes16,address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "includesAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -426,10 +400,6 @@ export interface IWorldInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setRecord(uint256,bytes32[],bytes)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setVotingTime",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "vote", data: BytesLike): Result;
@@ -538,12 +508,7 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getCurrentlyProposing(
-      parentKey: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    getCurrentlyVoting(
+    getCurrentlyActive(
       parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -596,12 +561,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    includesAddress(
-      arr: PromiseOrValue<string>[],
-      val: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     installModule(
       module: PromiseOrValue<string>,
       args: PromiseOrValue<BytesLike>,
@@ -617,6 +576,7 @@ export interface IWorld extends BaseContract {
     isStore(overrides?: CallOverrides): Promise<[void]>;
 
     proposeEntry(
+      parentKey: PromiseOrValue<BytesLike>,
       entry: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -702,11 +662,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setVotingTime(
-      parentKey: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     vote(
       proposedEntryKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -742,12 +697,7 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getCurrentlyProposing(
-    parentKey: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  getCurrentlyVoting(
+  getCurrentlyActive(
     parentKey: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -800,12 +750,6 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  includesAddress(
-    arr: PromiseOrValue<string>[],
-    val: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   installModule(
     module: PromiseOrValue<string>,
     args: PromiseOrValue<BytesLike>,
@@ -821,6 +765,7 @@ export interface IWorld extends BaseContract {
   isStore(overrides?: CallOverrides): Promise<void>;
 
   proposeEntry(
+    parentKey: PromiseOrValue<BytesLike>,
     entry: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -906,11 +851,6 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setVotingTime(
-    parentKey: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   vote(
     proposedEntryKey: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -944,12 +884,7 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getCurrentlyProposing(
-      parentKey: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    getCurrentlyVoting(
+    getCurrentlyActive(
       parentKey: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -1002,12 +937,6 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    includesAddress(
-      arr: PromiseOrValue<string>[],
-      val: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     installModule(
       module: PromiseOrValue<string>,
       args: PromiseOrValue<BytesLike>,
@@ -1023,6 +952,7 @@ export interface IWorld extends BaseContract {
     isStore(overrides?: CallOverrides): Promise<void>;
 
     proposeEntry(
+      parentKey: PromiseOrValue<BytesLike>,
       entry: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -1107,11 +1037,6 @@ export interface IWorld extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    setVotingTime(
-      parentKey: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     vote(
       proposedEntryKey: PromiseOrValue<BytesLike>,
@@ -1181,12 +1106,7 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getCurrentlyProposing(
-      parentKey: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    getCurrentlyVoting(
+    getCurrentlyActive(
       parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1239,12 +1159,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    includesAddress(
-      arr: PromiseOrValue<string>[],
-      val: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     installModule(
       module: PromiseOrValue<string>,
       args: PromiseOrValue<BytesLike>,
@@ -1260,6 +1174,7 @@ export interface IWorld extends BaseContract {
     isStore(overrides?: CallOverrides): Promise<BigNumber>;
 
     proposeEntry(
+      parentKey: PromiseOrValue<BytesLike>,
       entry: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1342,11 +1257,6 @@ export interface IWorld extends BaseContract {
       table: PromiseOrValue<BigNumberish>,
       key: PromiseOrValue<BytesLike>[],
       data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setVotingTime(
-      parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1386,12 +1296,7 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getCurrentlyProposing(
-      parentKey: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    getCurrentlyVoting(
+    getCurrentlyActive(
       parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1444,12 +1349,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    includesAddress(
-      arr: PromiseOrValue<string>[],
-      val: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     installModule(
       module: PromiseOrValue<string>,
       args: PromiseOrValue<BytesLike>,
@@ -1465,6 +1364,7 @@ export interface IWorld extends BaseContract {
     isStore(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     proposeEntry(
+      parentKey: PromiseOrValue<BytesLike>,
       entry: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1547,11 +1447,6 @@ export interface IWorld extends BaseContract {
       table: PromiseOrValue<BigNumberish>,
       key: PromiseOrValue<BytesLike>[],
       data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setVotingTime(
-      parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

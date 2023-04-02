@@ -11,24 +11,17 @@ import { ParentEntryTableId, ParentEntry } from "../tables/ParentEntry.sol";
 bytes32 constant SingletonKey = bytes32(uint256(0x060D));
 
 contract ProposeEntrySystem is System {
-
-  function includesAddress (address[] memory arr, address val) public pure returns (bool) {
-      for (uint i = 0; i < arr.length; i++) {
-          if (arr[i] == val) {
-              return true;
-          }
-      }
-      return false;
-  }
-
-  function proposeEntry(string memory entry) public returns (string memory) {
+  function proposeEntry(bytes32 parentKey, string memory entry) public returns (string memory) {
     address owner = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
     bytes32 key = bytes32(keccak256(abi.encodePacked(block.number, owner, gasleft()))); // creating a random key for the record
 
   //eventually need to get parent key from frontend.
-    bytes32 parentKey = key;
+    //  = key;
     // check if valid proposal period
+      address worldAddress = _world();
+      bool currentlyProposing = IWorld(worldAddress).getCurrentlyActive(parentKey);
 
+      if(currentlyProposing == false) return "did not work";
 
     address[] memory votes;
 
@@ -51,21 +44,41 @@ contract ProposeEntrySystem is System {
   }
 
   function vote(bytes32 proposedEntryKey) public returns (bool) {
-      address worldAddress = _world();
+      // address worldAddress = _world();
+      // address sender = _msgSender();
+      // ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
+
+      //check whether in a current valid voting period
+
+      // ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
+      // address[] memory votes = entry.votes;
+      // bytes32 parentKey = entry.parentKey;
+
       address sender = _msgSender();
-      ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
-
-    //check whether in a current valid voting period
-      address[] memory votes = ProposedEntry.getVotes(proposedEntryKey);
-      bytes32 parentKey = entry.parentKey;
       
-      bool currentlyVoting = IWorld(worldAddress).getCurrentlyVoting(parentKey);
 
+      // address worldAddress = _world();
+      // bool currentlyVoting = IWorld(worldAddress).getCurrentlyActive(parentKey);
 
-      // IS sender in votes?
-      if (includesAddress(votes, sender)) return false;
-      // Are we currently in the voting period?
-      if (currentlyVoting == false) return false;
+      // if(currentlyVoting == false) return false;
+      
+      //check if already voted
+      // ProposedEntry.getVotes()
+      // for (uint i=0; i < votes.length; i++) {
+      //     if (sender == votes[i]) {
+      //         return false;
+      //     }
+      // }
+
+      // address[] memory newvotes = new address[](votes.length + 1);
+
+      // for (uint i=0; i < votes.length; i++) {
+      //     newvotes[i] = votes[i];
+      // }
+
+      // newvotes[votes.length + 1] = sender;
+
+      // ProposedEntry.pushVotes(proposedEntryKey, sender);
 
       // We good
       ProposedEntry.pushVotes(proposedEntryKey, sender);

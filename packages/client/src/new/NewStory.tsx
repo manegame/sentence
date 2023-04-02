@@ -12,8 +12,8 @@ import { useEffect, useState } from "react";
 
 export const NewStory = () => {
   const {
-    components: { Entry, ProposedEntry },
-    world
+    components: { ProposedEntry, Entry },
+    world,
   } = useMUD();
 
   const [story, setCurrentStory] = useState<{
@@ -37,6 +37,7 @@ export const NewStory = () => {
     // Only care about newest story
     if (entries.length) {
       const [currentStory] = entries.reverse();
+
       const { parent, proposer, sentence } = getComponentValueStrict(
         Entry,
         currentStory
@@ -55,13 +56,20 @@ export const NewStory = () => {
     <FlexColumn>
       <h1 style={{ marginBottom: 24 }}>Current World</h1>
       <Story worldName={story?.key} entries={[story?.sentence]}>
-        <Composer />
+        <Composer parentEntryKey={story?.key} />
         {/* Would be good to show some loading stuff here/handle empty case. */}
         {proposedEntries.length ? (
           proposedEntries.map((key) => {
             const proposal = getComponentValueStrict(ProposedEntry, key);
-            const entityId = world.entities[key]
-            return <VotableEntry entry={proposal.sentence} entityId={entityId} votes={proposal.votes.length} key={entityId} />;
+            const entityId = world.entities[key];
+            // console.log(entityId, key);
+            return (
+              <VotableEntry
+                proposalKey={entityId}
+                entry={proposal.sentence}
+                votes={proposal.votes?.length || 0}
+              />
+            );
           })
         ) : (
           <></>
