@@ -67,7 +67,7 @@ export const Composer = ({
   return (
     <ComposerContainer>
       {promptInput}
-      {proposalTime && <p>Propose by block: {proposalTime}</p>}
+      {proposalTime && <p>Propose & vote by block: {proposalTime}</p>}
     </ComposerContainer>
   );
 };
