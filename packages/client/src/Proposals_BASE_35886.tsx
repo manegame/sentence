@@ -8,21 +8,17 @@ export const Proposals = () => {
   const {
     components: { ProposedEntry },
     network: { signer },
-    world,
     worldSend
   } = useMUD();
 
   const entities = useEntityQuery([Has(ProposedEntry)]);
 
-  const vote = async (ent: number) => {
-    
+  const vote = async (key: string) => {
     // Create a World contract instance
     const s = signer.get();
     if (!s) throw new Error("No signer");
 
-    const entityId = world.entities[ent]
-
-    const tx = await worldSend("vote", [entityId]);
+    const tx = await worldSend("vote", "0xb3f137b22e79a2abb9a0fa0e19997148858fc04f");
 
     // if (inputRef.current) {
     //   inputRef.current.value = "";
@@ -44,7 +40,7 @@ export const Proposals = () => {
       <ol>
         {entities.map((ent) => {
           const proposal = getComponentValueStrict(ProposedEntry, ent);
-          
+          console.log(proposal)
           return (
             <FlexColumn key={ent} style={{ marginBottom: 48 }}>
               <button onClick={() => vote(ent)}>
@@ -70,7 +66,7 @@ export const Proposals = () => {
 };
 
 const Title = styled.h1`
-  color: black;
+  color: white;
 `;
 
 const ProfileImg = styled.img`
@@ -88,7 +84,7 @@ const FlexColumn = styled.div`
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;s
+  align-items: center;
 `;
 
 const Bold = styled.span`
@@ -97,5 +93,6 @@ const Bold = styled.span`
 `;
 
 const ProposalText = styled.h3`
+  color: white;
   margin: 0px;
 `;

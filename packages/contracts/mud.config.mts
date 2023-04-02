@@ -1,4 +1,5 @@
 import { mudConfig, resolveTableId } from "@latticexyz/cli";
+// import { ProposedEntry, ProposedEntryData } from "./src/tables/ProposedEntry.sol";
 
 export default mudConfig({
   overrideSystems: {
@@ -19,9 +20,7 @@ export default mudConfig({
     ProposedEntry: {
       fileSelector: "proposedentry",
       schema: {
-        id: "uint256",
-        storyId: "uint256",
-        parentBlock: "uint256",
+        parentKey: "bytes32",
         proposedOnBlock: "uint256",
         timestamp: "uint256",
         proposer: "address",
@@ -32,19 +31,17 @@ export default mudConfig({
     EntryPeriod: {
       fileSelector: "entryperiod",
       schema: {
-        id: "uint256",
-        parentBlock: "uint256",
-        periodEndsBlock: "uint256",
-      },
+        periodStartsBlock: "uint256",
+        periodEndsBlock: "uint256"
+      }
     },
     VotePeriod: {
       fileSelector: "voteperiod",
       schema: {
-        id: "uint256",
-        parentBlock: "uint256",
-        periodEndsBlock: "uint256",
-      },
-    },
+        periodStartsBlock: "uint256",
+        periodEndsBlock: "uint256"
+      }
+    }
   },
   modules: [],
 });

@@ -27,12 +27,40 @@ import type {
   PromiseOrValue,
 } from "./common";
 
+export type ProposedEntryDataStruct = {
+  parentKey: PromiseOrValue<BytesLike>;
+  proposedOnBlock: PromiseOrValue<BigNumberish>;
+  timestamp: PromiseOrValue<BigNumberish>;
+  proposer: PromiseOrValue<string>;
+  sentence: PromiseOrValue<string>;
+  votes: PromiseOrValue<string>[];
+};
+
+export type ProposedEntryDataStructOutput = [
+  string,
+  BigNumber,
+  BigNumber,
+  string,
+  string,
+  string[]
+] & {
+  parentKey: string;
+  proposedOnBlock: BigNumber;
+  timestamp: BigNumber;
+  proposer: string;
+  sentence: string;
+  votes: string[];
+};
+
 export interface IWorldInterface extends utils.Interface {
   functions: {
     "call(bytes16,bytes16,bytes)": FunctionFragment;
+    "countVotes(bytes32)": FunctionFragment;
     "createStory()": FunctionFragment;
     "deleteRecord(uint256,bytes32[])": FunctionFragment;
     "deleteRecord(bytes16,bytes16,bytes32[])": FunctionFragment;
+    "getCurrentlyProposing(bytes32)": FunctionFragment;
+    "getCurrentlyVoting(bytes32)": FunctionFragment;
     "getField(uint256,bytes32[],uint8)": FunctionFragment;
     "getKeySchema(uint256)": FunctionFragment;
     "getRandomIndex(uint256)": FunctionFragment;
@@ -54,17 +82,22 @@ export interface IWorldInterface extends utils.Interface {
     "setField(bytes16,bytes16,bytes32[],uint8,bytes)": FunctionFragment;
     "setField(uint256,bytes32[],uint8,bytes)": FunctionFragment;
     "setMetadata(uint256,string,string[])": FunctionFragment;
+    "setProposalTime(bytes32)": FunctionFragment;
     "setRecord(bytes16,bytes16,bytes32[],bytes)": FunctionFragment;
     "setRecord(uint256,bytes32[],bytes)": FunctionFragment;
+    "setVotingTime(bytes32)": FunctionFragment;
     "vote(bytes32)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "call"
+      | "countVotes"
       | "createStory"
       | "deleteRecord(uint256,bytes32[])"
       | "deleteRecord(bytes16,bytes16,bytes32[])"
+      | "getCurrentlyProposing"
+      | "getCurrentlyVoting"
       | "getField"
       | "getKeySchema"
       | "getRandomIndex"
@@ -86,8 +119,10 @@ export interface IWorldInterface extends utils.Interface {
       | "setField(bytes16,bytes16,bytes32[],uint8,bytes)"
       | "setField(uint256,bytes32[],uint8,bytes)"
       | "setMetadata"
+      | "setProposalTime"
       | "setRecord(bytes16,bytes16,bytes32[],bytes)"
       | "setRecord(uint256,bytes32[],bytes)"
+      | "setVotingTime"
       | "vote"
   ): FunctionFragment;
 
@@ -98,6 +133,10 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BytesLike>,
       PromiseOrValue<BytesLike>
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "countVotes",
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "createStory",
@@ -114,6 +153,14 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BytesLike>,
       PromiseOrValue<BytesLike>[]
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCurrentlyProposing",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCurrentlyVoting",
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "getField",
@@ -243,6 +290,10 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "setProposalTime",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setRecord(bytes16,bytes16,bytes32[],bytes)",
     values: [
       PromiseOrValue<BytesLike>,
@@ -260,11 +311,16 @@ export interface IWorldInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "setVotingTime",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "vote",
     values: [PromiseOrValue<BytesLike>]
   ): string;
 
   decodeFunctionResult(functionFragment: "call", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "countVotes", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "createStory",
     data: BytesLike
@@ -275,6 +331,14 @@ export interface IWorldInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "deleteRecord(bytes16,bytes16,bytes32[])",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getCurrentlyProposing",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getCurrentlyVoting",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getField", data: BytesLike): Result;
@@ -353,11 +417,19 @@ export interface IWorldInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setProposalTime",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setRecord(bytes16,bytes16,bytes32[],bytes)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "setRecord(uint256,bytes32[],bytes)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setVotingTime",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "vote", data: BytesLike): Result;
@@ -444,6 +516,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    countVotes(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     createStory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -458,6 +535,16 @@ export interface IWorld extends BaseContract {
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
       key: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getCurrentlyProposing(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getCurrentlyVoting(
+      parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -595,6 +682,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setProposalTime(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     "setRecord(bytes16,bytes16,bytes32[],bytes)"(
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
@@ -610,6 +702,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setVotingTime(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     vote(
       proposedEntryKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -620,6 +717,11 @@ export interface IWorld extends BaseContract {
     namespace: PromiseOrValue<BytesLike>,
     file: PromiseOrValue<BytesLike>,
     funcSelectorAndArgs: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  countVotes(
+    parentKey: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -637,6 +739,16 @@ export interface IWorld extends BaseContract {
     namespace: PromiseOrValue<BytesLike>,
     file: PromiseOrValue<BytesLike>,
     key: PromiseOrValue<BytesLike>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getCurrentlyProposing(
+    parentKey: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getCurrentlyVoting(
+    parentKey: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -774,6 +886,11 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setProposalTime(
+    parentKey: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   "setRecord(bytes16,bytes16,bytes32[],bytes)"(
     namespace: PromiseOrValue<BytesLike>,
     file: PromiseOrValue<BytesLike>,
@@ -786,6 +903,11 @@ export interface IWorld extends BaseContract {
     table: PromiseOrValue<BigNumberish>,
     key: PromiseOrValue<BytesLike>[],
     data: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setVotingTime(
+    parentKey: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -802,6 +924,11 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    countVotes(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<ProposedEntryDataStructOutput>;
+
     createStory(overrides?: CallOverrides): Promise<void>;
 
     "deleteRecord(uint256,bytes32[])"(
@@ -816,6 +943,16 @@ export interface IWorld extends BaseContract {
       key: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    getCurrentlyProposing(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    getCurrentlyVoting(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     getField(
       table: PromiseOrValue<BigNumberish>,
@@ -951,6 +1088,11 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setProposalTime(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     "setRecord(bytes16,bytes16,bytes32[],bytes)"(
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
@@ -965,6 +1107,11 @@ export interface IWorld extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    setVotingTime(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     vote(
       proposedEntryKey: PromiseOrValue<BytesLike>,
@@ -1012,6 +1159,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    countVotes(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     createStory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1026,6 +1178,16 @@ export interface IWorld extends BaseContract {
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
       key: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getCurrentlyProposing(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getCurrentlyVoting(
+      parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1163,6 +1325,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setProposalTime(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     "setRecord(bytes16,bytes16,bytes32[],bytes)"(
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
@@ -1175,6 +1342,11 @@ export interface IWorld extends BaseContract {
       table: PromiseOrValue<BigNumberish>,
       key: PromiseOrValue<BytesLike>[],
       data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setVotingTime(
+      parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1192,6 +1364,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    countVotes(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     createStory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1206,6 +1383,16 @@ export interface IWorld extends BaseContract {
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
       key: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getCurrentlyProposing(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getCurrentlyVoting(
+      parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1343,6 +1530,11 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    setProposalTime(
+      parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     "setRecord(bytes16,bytes16,bytes32[],bytes)"(
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
@@ -1355,6 +1547,11 @@ export interface IWorld extends BaseContract {
       table: PromiseOrValue<BigNumberish>,
       key: PromiseOrValue<BytesLike>[],
       data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setVotingTime(
+      parentKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

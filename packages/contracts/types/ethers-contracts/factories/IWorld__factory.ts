@@ -112,6 +112,57 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "parentKey",
+        type: "bytes32",
+      },
+    ],
+    name: "countVotes",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "bytes32",
+            name: "parentKey",
+            type: "bytes32",
+          },
+          {
+            internalType: "uint256",
+            name: "proposedOnBlock",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "proposer",
+            type: "address",
+          },
+          {
+            internalType: "string",
+            name: "sentence",
+            type: "string",
+          },
+          {
+            internalType: "address[]",
+            name: "votes",
+            type: "address[]",
+          },
+        ],
+        internalType: "struct ProposedEntryData",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "createStory",
     outputs: [],
@@ -156,6 +207,44 @@ const _abi = [
     ],
     name: "deleteRecord",
     outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "parentKey",
+        type: "bytes32",
+      },
+    ],
+    name: "getCurrentlyProposing",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "parentKey",
+        type: "bytes32",
+      },
+    ],
+    name: "getCurrentlyVoting",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -637,6 +726,25 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bytes32",
+        name: "parentKey",
+        type: "bytes32",
+      },
+    ],
+    name: "setProposalTime",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "bytes16",
         name: "namespace",
         type: "bytes16",
@@ -682,6 +790,25 @@ const _abi = [
     ],
     name: "setRecord",
     outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "parentKey",
+        type: "bytes32",
+      },
+    ],
+    name: "setVotingTime",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },

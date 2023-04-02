@@ -8,21 +8,20 @@ export const Proposals = () => {
   const {
     components: { ProposedEntry },
     network: { signer },
-    world,
-    worldSend
+    worldSend,
+    world
   } = useMUD();
 
   const entities = useEntityQuery([Has(ProposedEntry)]);
 
-  const vote = async (ent: number) => {
-    
+  const vote = async (key: string) => {
     // Create a World contract instance
     const s = signer.get();
     if (!s) throw new Error("No signer");
 
-    const entityId = world.entities[ent]
+    // const convertedKey = key.padEnd(66, "0")
 
-    const tx = await worldSend("vote", [entityId]);
+    const tx = await worldSend("vote", [key]);
 
     // if (inputRef.current) {
     //   inputRef.current.value = "";
@@ -44,10 +43,11 @@ export const Proposals = () => {
       <ol>
         {entities.map((ent) => {
           const proposal = getComponentValueStrict(ProposedEntry, ent);
-          
+          const entityId = world.entities[ent];
+          console.log(entityId)
           return (
             <FlexColumn key={ent} style={{ marginBottom: 48 }}>
-              <button onClick={() => vote(ent)}>
+              <button onClick={() => vote(entityId)}>
                 Vote
               </button>
               <p style={{ marginBottom: 4 }}>Proposed by:</p>
@@ -70,7 +70,7 @@ export const Proposals = () => {
 };
 
 const Title = styled.h1`
-  color: black;
+  color: white;
 `;
 
 const ProfileImg = styled.img`
@@ -88,7 +88,7 @@ const FlexColumn = styled.div`
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;s
+  align-items: center;
 `;
 
 const Bold = styled.span`
@@ -97,5 +97,6 @@ const Bold = styled.span`
 `;
 
 const ProposalText = styled.h3`
+  color: white;
   margin: 0px;
 `;

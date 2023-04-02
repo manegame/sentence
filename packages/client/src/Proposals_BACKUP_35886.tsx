@@ -8,8 +8,8 @@ export const Proposals = () => {
   const {
     components: { ProposedEntry },
     network: { signer },
-    world,
-    worldSend
+    worldSend,
+    world
   } = useMUD();
 
   const entities = useEntityQuery([Has(ProposedEntry)]);
@@ -70,7 +70,7 @@ export const Proposals = () => {
 };
 
 const Title = styled.h1`
-  color: black;
+  color: white;
 `;
 
 const ProfileImg = styled.img`
@@ -88,7 +88,7 @@ const FlexColumn = styled.div`
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;s
+  align-items: center;
 `;
 
 const Bold = styled.span`
@@ -97,5 +97,6 @@ const Bold = styled.span`
 `;
 
 const ProposalText = styled.h3`
+  color: white;
   margin: 0px;
 `;

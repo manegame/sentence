@@ -27,9 +27,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          storyId: RecsType.BigInt,
-          parentBlock: RecsType.BigInt,
+          parentKey: RecsType.String,
           proposedOnBlock: RecsType.BigInt,
           timestamp: RecsType.BigInt,
           proposer: RecsType.String,
@@ -49,8 +47,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          parentBlock: RecsType.BigInt,
+          periodStartsBlock: RecsType.BigInt,
           periodEndsBlock: RecsType.BigInt,
         },
         {
@@ -66,8 +63,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          parentBlock: RecsType.BigInt,
+          periodStartsBlock: RecsType.BigInt,
           periodEndsBlock: RecsType.BigInt,
         },
         {

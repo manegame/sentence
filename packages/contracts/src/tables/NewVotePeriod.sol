@@ -21,18 +21,16 @@ uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes1
 uint256 constant NewVotePeriodTableId = _tableId;
 
 struct NewVotePeriodData {
-  uint256 id;
-  uint256 parentBlock;
+  uint256 periodStartsBlock;
   uint256 periodEndsBlock;
 }
 
 library NewVotePeriod {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](3);
+    SchemaType[] memory _schema = new SchemaType[](2);
     _schema[0] = SchemaType.UINT256;
     _schema[1] = SchemaType.UINT256;
-    _schema[2] = SchemaType.UINT256;
 
     return SchemaLib.encode(_schema);
   }
@@ -46,10 +44,9 @@ library NewVotePeriod {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](3);
-    _fieldNames[0] = "id";
-    _fieldNames[1] = "parentBlock";
-    _fieldNames[2] = "periodEndsBlock";
+    string[] memory _fieldNames = new string[](2);
+    _fieldNames[0] = "periodStartsBlock";
+    _fieldNames[1] = "periodEndsBlock";
     return ("NewVotePeriod", _fieldNames);
   }
 
@@ -75,8 +72,8 @@ library NewVotePeriod {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get id */
-  function getId(bytes32 key) internal view returns (uint256 id) {
+  /** Get periodStartsBlock */
+  function getPeriodStartsBlock(bytes32 key) internal view returns (uint256 periodStartsBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -84,8 +81,8 @@ library NewVotePeriod {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get id (using the specified store) */
-  function getId(IStore _store, bytes32 key) internal view returns (uint256 id) {
+  /** Get periodStartsBlock (using the specified store) */
+  function getPeriodStartsBlock(IStore _store, bytes32 key) internal view returns (uint256 periodStartsBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -93,54 +90,20 @@ library NewVotePeriod {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set id */
-  function setId(bytes32 key, uint256 id) internal {
+  /** Set periodStartsBlock */
+  function setPeriodStartsBlock(bytes32 key, uint256 periodStartsBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((periodStartsBlock)));
   }
 
-  /** Set id (using the specified store) */
-  function setId(IStore _store, bytes32 key, uint256 id) internal {
+  /** Set periodStartsBlock (using the specified store) */
+  function setPeriodStartsBlock(IStore _store, bytes32 key, uint256 periodStartsBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
-  }
-
-  /** Get parentBlock */
-  function getParentBlock(bytes32 key) internal view returns (uint256 parentBlock) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
-    return (uint256(Bytes.slice32(_blob, 0)));
-  }
-
-  /** Get parentBlock (using the specified store) */
-  function getParentBlock(IStore _store, bytes32 key) internal view returns (uint256 parentBlock) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
-    return (uint256(Bytes.slice32(_blob, 0)));
-  }
-
-  /** Set parentBlock */
-  function setParentBlock(bytes32 key, uint256 parentBlock) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((parentBlock)));
-  }
-
-  /** Set parentBlock (using the specified store) */
-  function setParentBlock(IStore _store, bytes32 key, uint256 parentBlock) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((parentBlock)));
+    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((periodStartsBlock)));
   }
 
   /** Get periodEndsBlock */
@@ -148,7 +111,7 @@ library NewVotePeriod {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 2);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -157,7 +120,7 @@ library NewVotePeriod {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 2);
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
@@ -166,7 +129,7 @@ library NewVotePeriod {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((periodEndsBlock)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((periodEndsBlock)));
   }
 
   /** Set periodEndsBlock (using the specified store) */
@@ -174,7 +137,7 @@ library NewVotePeriod {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((periodEndsBlock)));
+    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((periodEndsBlock)));
   }
 
   /** Get the full data */
@@ -196,8 +159,8 @@ library NewVotePeriod {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal {
-    bytes memory _data = encode(id, parentBlock, periodEndsBlock);
+  function set(bytes32 key, uint256 periodStartsBlock, uint256 periodEndsBlock) internal {
+    bytes memory _data = encode(periodStartsBlock, periodEndsBlock);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -206,8 +169,8 @@ library NewVotePeriod {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal {
-    bytes memory _data = encode(id, parentBlock, periodEndsBlock);
+  function set(IStore _store, bytes32 key, uint256 periodStartsBlock, uint256 periodEndsBlock) internal {
+    bytes memory _data = encode(periodStartsBlock, periodEndsBlock);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -217,26 +180,24 @@ library NewVotePeriod {
 
   /** Set the full data using the data struct */
   function set(bytes32 key, NewVotePeriodData memory _table) internal {
-    set(key, _table.id, _table.parentBlock, _table.periodEndsBlock);
+    set(key, _table.periodStartsBlock, _table.periodEndsBlock);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, bytes32 key, NewVotePeriodData memory _table) internal {
-    set(_store, key, _table.id, _table.parentBlock, _table.periodEndsBlock);
+    set(_store, key, _table.periodStartsBlock, _table.periodEndsBlock);
   }
 
   /** Decode the tightly packed blob using this table's schema */
   function decode(bytes memory _blob) internal pure returns (NewVotePeriodData memory _table) {
-    _table.id = (uint256(Bytes.slice32(_blob, 0)));
+    _table.periodStartsBlock = (uint256(Bytes.slice32(_blob, 0)));
 
-    _table.parentBlock = (uint256(Bytes.slice32(_blob, 32)));
-
-    _table.periodEndsBlock = (uint256(Bytes.slice32(_blob, 64)));
+    _table.periodEndsBlock = (uint256(Bytes.slice32(_blob, 32)));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(uint256 id, uint256 parentBlock, uint256 periodEndsBlock) internal view returns (bytes memory) {
-    return abi.encodePacked(id, parentBlock, periodEndsBlock);
+  function encode(uint256 periodStartsBlock, uint256 periodEndsBlock) internal view returns (bytes memory) {
+    return abi.encodePacked(periodStartsBlock, periodEndsBlock);
   }
 
   /* Delete all data for given keys */
