@@ -17,7 +17,7 @@ export const VotableEntry = ({ entry }: { entry: string }) => {
     <ProposedEntryContainer>
       <VotingContainer>
         <Clickable onClick={() => vote(1)}>+</Clickable>
-        <Clickable onClick={() => vote(-1)}>-</Clickable>
+        <p>(0)</p>
       </VotingContainer>
       <TextContainer>{entry}</TextContainer>
     </ProposedEntryContainer>
