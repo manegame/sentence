@@ -23,7 +23,7 @@ uint256 constant ProposedEntryTableId = _tableId;
 struct ProposedEntryData {
   uint256 id;
   uint256 storyId;
-  uint256 parentId;
+  uint256 parentBlock;
   uint256 proposedOnBlock;
   uint256 timestamp;
   address proposer;
@@ -59,7 +59,7 @@ library ProposedEntry {
     string[] memory _fieldNames = new string[](8);
     _fieldNames[0] = "id";
     _fieldNames[1] = "storyId";
-    _fieldNames[2] = "parentId";
+    _fieldNames[2] = "parentBlock";
     _fieldNames[3] = "proposedOnBlock";
     _fieldNames[4] = "timestamp";
     _fieldNames[5] = "proposer";
@@ -158,8 +158,8 @@ library ProposedEntry {
     _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((storyId)));
   }
 
-  /** Get parentId */
-  function getParentId(bytes32 key) internal view returns (uint256 parentId) {
+  /** Get parentBlock */
+  function getParentBlock(bytes32 key) internal view returns (uint256 parentBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -167,8 +167,8 @@ library ProposedEntry {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get parentId (using the specified store) */
-  function getParentId(IStore _store, bytes32 key) internal view returns (uint256 parentId) {
+  /** Get parentBlock (using the specified store) */
+  function getParentBlock(IStore _store, bytes32 key) internal view returns (uint256 parentBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -176,20 +176,20 @@ library ProposedEntry {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set parentId */
-  function setParentId(bytes32 key, uint256 parentId) internal {
+  /** Set parentBlock */
+  function setParentBlock(bytes32 key, uint256 parentBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((parentId)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((parentBlock)));
   }
 
-  /** Set parentId (using the specified store) */
-  function setParentId(IStore _store, bytes32 key, uint256 parentId) internal {
+  /** Set parentBlock (using the specified store) */
+  function setParentBlock(IStore _store, bytes32 key, uint256 parentBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((parentId)));
+    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((parentBlock)));
   }
 
   /** Get proposedOnBlock */
@@ -417,14 +417,14 @@ library ProposedEntry {
     bytes32 key,
     uint256 id,
     uint256 storyId,
-    uint256 parentId,
+    uint256 parentBlock,
     uint256 proposedOnBlock,
     uint256 timestamp,
     address proposer,
     string memory sentence,
     address[] memory votes
   ) internal {
-    bytes memory _data = encode(id, storyId, parentId, proposedOnBlock, timestamp, proposer, sentence, votes);
+    bytes memory _data = encode(id, storyId, parentBlock, proposedOnBlock, timestamp, proposer, sentence, votes);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -438,14 +438,14 @@ library ProposedEntry {
     bytes32 key,
     uint256 id,
     uint256 storyId,
-    uint256 parentId,
+    uint256 parentBlock,
     uint256 proposedOnBlock,
     uint256 timestamp,
     address proposer,
     string memory sentence,
     address[] memory votes
   ) internal {
-    bytes memory _data = encode(id, storyId, parentId, proposedOnBlock, timestamp, proposer, sentence, votes);
+    bytes memory _data = encode(id, storyId, parentBlock, proposedOnBlock, timestamp, proposer, sentence, votes);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -459,7 +459,7 @@ library ProposedEntry {
       key,
       _table.id,
       _table.storyId,
-      _table.parentId,
+      _table.parentBlock,
       _table.proposedOnBlock,
       _table.timestamp,
       _table.proposer,
@@ -475,7 +475,7 @@ library ProposedEntry {
       key,
       _table.id,
       _table.storyId,
-      _table.parentId,
+      _table.parentBlock,
       _table.proposedOnBlock,
       _table.timestamp,
       _table.proposer,
@@ -493,7 +493,7 @@ library ProposedEntry {
 
     _table.storyId = (uint256(Bytes.slice32(_blob, 32)));
 
-    _table.parentId = (uint256(Bytes.slice32(_blob, 64)));
+    _table.parentBlock = (uint256(Bytes.slice32(_blob, 64)));
 
     _table.proposedOnBlock = (uint256(Bytes.slice32(_blob, 96)));
 
@@ -517,7 +517,7 @@ library ProposedEntry {
   function encode(
     uint256 id,
     uint256 storyId,
-    uint256 parentId,
+    uint256 parentBlock,
     uint256 proposedOnBlock,
     uint256 timestamp,
     address proposer,
@@ -533,7 +533,7 @@ library ProposedEntry {
       abi.encodePacked(
         id,
         storyId,
-        parentId,
+        parentBlock,
         proposedOnBlock,
         timestamp,
         proposer,

@@ -8,7 +8,8 @@ export const Proposals = () => {
   const {
     components: { ProposedEntry },
     network: { signer },
-    worldSend
+    worldSend,
+    world
   } = useMUD();
 
   const entities = useEntityQuery([Has(ProposedEntry)]);
@@ -18,7 +19,9 @@ export const Proposals = () => {
     const s = signer.get();
     if (!s) throw new Error("No signer");
 
-    const tx = await worldSend("vote", "0xb3f137b22e79a2abb9a0fa0e19997148858fc04f");
+    // const convertedKey = key.padEnd(66, "0")
+
+    const tx = await worldSend("vote", [key]);
 
     // if (inputRef.current) {
     //   inputRef.current.value = "";
@@ -40,10 +43,11 @@ export const Proposals = () => {
       <ol>
         {entities.map((ent) => {
           const proposal = getComponentValueStrict(ProposedEntry, ent);
-          console.log(proposal)
+          const entityId = world.entities[ent];
+          console.log(entityId)
           return (
             <FlexColumn key={ent} style={{ marginBottom: 48 }}>
-              <button onClick={() => vote(ent)}>
+              <button onClick={() => vote(entityId)}>
                 Vote
               </button>
               <p style={{ marginBottom: 4 }}>Proposed by:</p>

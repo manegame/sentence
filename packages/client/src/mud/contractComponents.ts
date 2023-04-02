@@ -46,7 +46,7 @@ export function defineContractComponents(world: World) {
         {
           id: RecsType.BigInt,
           storyId: RecsType.BigInt,
-          parentId: RecsType.BigInt,
+          parentBlock: RecsType.BigInt,
           proposedOnBlock: RecsType.BigInt,
           timestamp: RecsType.BigInt,
           proposer: RecsType.String,

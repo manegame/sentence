@@ -9,9 +9,10 @@ bytes32 constant SingletonKey = bytes32(uint256(0x060D));
 
 contract ProposeEntrySystem is System {
   function proposeEntry(string memory entry) public returns (string memory) {
-    bytes32 key = bytes32(abi.encodePacked(block.number, msg.sender, gasleft())); // creating a random key for the record
-
     address owner = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
+
+    bytes32 key = bytes32(keccak256(abi.encodePacked(block.number, owner, gasleft()))); // creating a random key for the record
+
     address[] memory votes;
 
     ProposedEntry.set(
@@ -35,14 +36,14 @@ contract ProposeEntrySystem is System {
 
       address sender = _msgSender();
       
-      bool hasAlreadyVoted = false;
+      // bool hasAlreadyVoted = false;
           
-      for (uint i=0; i < votes.length; i++) {
-          if (sender == votes[i]) {
-              hasAlreadyVoted = true;
-              return false;
-          }
-      }
+      // for (uint i=0; i < votes.length; i++) {
+      //     if (sender == votes[i]) {
+      //         hasAlreadyVoted = true;
+      //         return false;
+      //     }
+      // }
 
       address[] memory newvotes = new address[](votes.length + 1);
 
