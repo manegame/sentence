@@ -5,6 +5,21 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
+    Story: (() => {
+      const tableId = new TableId("", "story");
+      return defineComponent(
+        world,
+        {
+          archived: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
     Entry: (() => {
       const tableId = new TableId("", "entry");
       return defineComponent(
@@ -13,6 +28,21 @@ export function defineContractComponents(world: World) {
           parent: RecsType.String,
           proposer: RecsType.String,
           sentence: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    ParentStory: (() => {
+      const tableId = new TableId("", "parentstory");
+      return defineComponent(
+        world,
+        {
+          parentKey: RecsType.String,
         },
         {
           metadata: {
@@ -42,13 +72,12 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    EntryPeriod: (() => {
-      const tableId = new TableId("", "entryperiod");
+    ParentEntry: (() => {
+      const tableId = new TableId("", "parententry");
       return defineComponent(
         world,
         {
-          periodStartsBlock: RecsType.BigInt,
-          periodEndsBlock: RecsType.BigInt,
+          parentKey: RecsType.String,
         },
         {
           metadata: {
@@ -58,12 +87,11 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    VotePeriod: (() => {
-      const tableId = new TableId("", "voteperiod");
+    ProposalPeriod: (() => {
+      const tableId = new TableId("", "proposalperiod");
       return defineComponent(
         world,
         {
-          periodStartsBlock: RecsType.BigInt,
           periodEndsBlock: RecsType.BigInt,
         },
         {
