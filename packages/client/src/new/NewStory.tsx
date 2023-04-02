@@ -24,6 +24,8 @@ export const NewStory = () => {
     sentence: string;
   }>();
 
+  const [entrySentences, setEntrySentences] = useState<string[]>([]);
+
   // Update this to only grab Entry where parent = address(0)
   const entries = useEntityQuery([Has(Entry)]);
   const proposedEntries = useEntityQuery([Has(ProposedEntry)]);
@@ -33,11 +35,16 @@ export const NewStory = () => {
 
     // Builds the stories state object, meaning, it has to do the recursive DB pull
     // of parent addresses.
-
-    console.log("A new top level Entry (story) has appeared.");
     // Only care about newest story
     if (entries.length) {
       const [currentStory] = entries.reverse();
+
+      const allSentences = entries.map((ent) => {
+        const entry = getComponentValueStrict(Entry, ent);
+        return entry.sentence;
+      });
+
+      setEntrySentences(allSentences.reverse());
 
       const { parent, proposer, sentence } = getComponentValueStrict(
         Entry,
@@ -53,8 +60,6 @@ export const NewStory = () => {
     }
   }, [entries]);
 
-  console.log("story ", story);
-
   let parentKeyId = null;
   if (story?.key) {
     parentKeyId = world.entities[story?.key];
@@ -64,37 +69,36 @@ export const NewStory = () => {
     <FlexColumn>
       <h1 style={{ marginBottom: 24 }}>Current Sentence</h1>
       <PaddedContainer>
-      <Story worldName={story?.key} entries={[story?.sentence]}>
-        <Composer parentEntryKey={story?.key} />
-        {/* Would be good to show some loading stuff here/handle empty case. */}
-        {proposedEntries.length ? (
-          <>
-            {proposedEntries.map((key) => {
-              const proposal = getComponentValueStrict(ProposedEntry, key);
-              const entityId = world.entities[key];
-              // return ''
-              return (
-                <ProposedEntryComponent
-                  entry={proposal.sentence}
-                  entityId={entityId}
-                  votes={proposal.votes.length}
-                  key={entityId}
-                />
-              );
-            })}
-            <CountVotesButton proposalKey={parentKeyId} />
-          </>
-        ) : (
-          <></>
-        )}
-      </Story>
+        <Story worldName={story?.key} entries={entrySentences}>
+          <Composer parentEntryKey={story?.key} />
+          {/* Would be good to show some loading stuff here/handle empty case. */}
+          {proposedEntries.length ? (
+            <>
+              {proposedEntries.map((key) => {
+                const proposal = getComponentValueStrict(ProposedEntry, key);
+                const entityId = world.entities[key];
+                // return ''
+                return (
+                  <ProposedEntryComponent
+                    entry={proposal.sentence}
+                    entityId={entityId}
+                    votes={proposal.votes.length}
+                    key={entityId}
+                  />
+                );
+              })}
+              <CountVotesButton proposalKey={parentKeyId} />
+            </>
+          ) : (
+            <></>
+          )}
+        </Story>
       </PaddedContainer>
     </FlexColumn>
   );
 };
 
-const PaddedContainer = styled.div`
-`
+const PaddedContainer = styled.div``;
 
 const FlexColumn = styled.div`
   display: flex;

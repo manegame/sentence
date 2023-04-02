@@ -47,7 +47,7 @@ export const Archives = () => {
         };
       });
 
-      setStories(archivedStories);
+      setStories([]);
     }
   }, [entities]);
 
@@ -58,7 +58,7 @@ export const Archives = () => {
         {stories.reverse().map((story) => (
           <>
             <Story worldName={story.key} entries={[story.sentence]} />
-            <hr style={{margin: '2rem 0' }}></hr>
+            <hr style={{ margin: "2rem 0" }}></hr>
           </>
         ))}
       </ArchivesWrapper>
@@ -67,10 +67,9 @@ export const Archives = () => {
 };
 
 const FlexColumn = styled.div`
-margin: 0 1.8rem;
+  margin: 0 1.8rem;
 `;
 
 const ArchivesWrapper = styled.div`
   // width: 500px;
 `;
-
