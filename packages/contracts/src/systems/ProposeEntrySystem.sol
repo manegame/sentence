@@ -56,3 +56,15 @@ contract ProposeEntrySystem is System {
       return true;
   }
 }
+
+// struct ProposedEntryData {
+    // bytes32 key,
+    // uint256 id,
+    // uint256 storyId,
+    // uint256 parentId,
+    // uint256 proposedOnBlock,
+    // uint256 timestamp,
+    // address proposer,
+    // string memory sentence
+// }
+

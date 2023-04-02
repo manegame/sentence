@@ -4,7 +4,7 @@ export default mudConfig({
   overrideSystems: {
     ProposeEntrySystem: {
       fileSelector: "proposalssystem",
-      openAccess: true
+      openAccess: true,
     },
   },
   tables: {
@@ -12,8 +12,8 @@ export default mudConfig({
       fileSelector: "story",
       schema: {
         id: "uint256",
-        lastProposalId: "uint256" // should this be last entry id?
-      }
+        lastProposalId: "uint256", // should this be last entry id?
+      },
     },
     Entry: {
       fileSelector: "entry",
@@ -21,8 +21,8 @@ export default mudConfig({
         id: "uint256",
         storyId: "uint256",
         parentId: "uint256",
-        proposer: "address"
-      }
+        proposer: "address",
+      },
     },
     ProposedEntry: {
       fileSelector: "proposedentries",
@@ -34,7 +34,7 @@ export default mudConfig({
         timestamp: "uint256",
         proposer: "address",
         sentence: "string",
-        votes:"address[]"
+        votes: "address[]",
       },
     },
     NewEntryPeriod: {
@@ -42,17 +42,17 @@ export default mudConfig({
       schema: {
         id: "uint256",
         parentBlock: "uint256",
-        periodEndsBlock: "uint256"
-      }
+        periodEndsBlock: "uint256",
+      },
     },
     NewVotePeriod: {
       fileSelector: "newvoteperiod",
       schema: {
         id: "uint256",
         parentBlock: "uint256",
-        perioSdEndsBlock: "uint256"
-      }
-    }
+        periodEndsBlock: "uint256",
+      },
+    },
   },
   modules: [],
 });

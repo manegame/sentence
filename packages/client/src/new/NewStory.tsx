@@ -34,7 +34,7 @@ export const NewStory = () => {
         {entities.length ? (
           entities.map((ent) => {
             const proposal = getComponentValueStrict(ProposedEntry, ent);
-            return <VotableEntry entry={proposal.entry} />;
+            return <VotableEntry entry={proposal.sentence} />;
           })
         ) : (
           <></>
