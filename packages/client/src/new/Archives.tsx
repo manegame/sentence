@@ -53,10 +53,13 @@ export const Archives = () => {
 
   return (
     <FlexColumn>
-      <h1 style={{ marginBottom: 24 }}>Explore older worlds</h1>
+      <h1 style={{ marginBottom: 24 }}>Explore older sentences</h1>
       <ArchivesWrapper>
         {stories.reverse().map((story) => (
-          <Story worldName={story.key} entries={[story.sentence]} />
+          <>
+            <Story worldName={story.key} entries={[story.sentence]} />
+            <hr style={{margin: '2rem 0' }}></hr>
+          </>
         ))}
       </ArchivesWrapper>
     </FlexColumn>
@@ -64,21 +67,10 @@ export const Archives = () => {
 };
 
 const FlexColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin-left: 24px;
+margin: 0 1.8rem;
 `;
 
 const ArchivesWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: top;
+  // width: 500px;
 `;
 
-const StoryWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin-right: 64px;
-`;

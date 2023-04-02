@@ -29,11 +29,10 @@ export const NoWorldModal = () => {
         onClick={(e: any) => e.stopPropagation()}
         isVisible={modalIsOpen}
       >
-        <p>
-          there are no current active worlds. click the button below to start a
-          new one
+        <p style={{ marginBottom: 24 }}>
+          there are no current active sentences.
         </p>
-        <button onClick={() => createNewWorld()}>generate new world</button>
+        <button style={{fontSize: 16}} onClick={() => createNewWorld()}>New sentence</button>
       </Content>
     </Backdrop>
   );

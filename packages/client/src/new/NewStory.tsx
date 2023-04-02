@@ -62,7 +62,8 @@ export const NewStory = () => {
 
   return (
     <FlexColumn>
-      <h1 style={{ marginBottom: 24 }}>Current World</h1>
+      <h1 style={{ marginBottom: 24 }}>Current Sentence</h1>
+      <PaddedContainer>
       <Story worldName={story?.key} entries={[story?.sentence]}>
         <Composer parentEntryKey={story?.key} />
         {/* Would be good to show some loading stuff here/handle empty case. */}
@@ -87,14 +88,19 @@ export const NewStory = () => {
           <></>
         )}
       </Story>
+      </PaddedContainer>
     </FlexColumn>
   );
 };
+
+const PaddedContainer = styled.div`
+`
 
 const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
   border-right: 2px solid black;
-  width: 500px;
+  width: 100%;
+  padding-right: 1.8rem;
 `;
