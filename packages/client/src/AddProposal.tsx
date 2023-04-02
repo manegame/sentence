@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import { useRef, useState } from "react";
 import { useMUD } from "./MUDContext";
 
@@ -12,7 +14,7 @@ export const AddProposal = () => {
   const useInput = ({ type }: any) => {
     const [value, setValue] = useState("");
     const input = (
-      <input
+      <StyledInput
         ref={inputRef}
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -54,3 +56,8 @@ export const AddProposal = () => {
     </div>
   );
 };
+
+const StyledInput = styled.input`
+  background-color: #ccc;
+  color: red;
+`

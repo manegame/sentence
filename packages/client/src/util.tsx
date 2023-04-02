@@ -1,3 +1,4 @@
+import styled from "styled-components"
 import { useState } from "react";
 
 export const getParameterByName = (name: any, url = window.location.href) => {
@@ -20,7 +21,7 @@ export const useInput = ({ type }: { type: string }) => {
   const [value, setValue] = useState("");
 
   const input = (
-    <input
+    <StyledInput
       value={value}
       onChange={(e) => setValue(e.target.value)}
       type={type}
@@ -28,3 +29,11 @@ export const useInput = ({ type }: { type: string }) => {
   );
   return [value, input];
 };
+
+const StyledInput = styled.textarea`
+  background-color: #ff0;
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  font-family: "Helvetica";
+`

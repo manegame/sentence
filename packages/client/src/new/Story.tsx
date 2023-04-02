@@ -10,19 +10,24 @@ export const Story = ({
   worldName: EntityIndex;
   entries: string[];
   children?: ReactNode;
-}) => (
-  <StoryWrapper>
-    <h1>world {worldName}</h1>
-    {entries.map((entry: string) => (
-      <p>{entry}</p>
-    ))}
-    {children}
-  </StoryWrapper>
-);
+}) => {
+
+  console.log('world name ', worldName)
+
+  return (
+    <StoryWrapper>
+      <h1 style={{ marginBottom: 24 }}>world {worldName}</h1>
+      {entries.map((entry: string) => (
+        <p>{entry}</p>
+      ))}
+      {children}
+    </StoryWrapper>
+  )
+};
 
 const StoryWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin-right: 64px;
+  margin-right: calc(var(--margin) * 2);
 `;

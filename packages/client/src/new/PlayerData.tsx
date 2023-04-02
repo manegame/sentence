@@ -11,16 +11,22 @@ export const PlayerData = () => {
   const currentBlock = useObservableState(blockNumber$);
 
   return (
-    <div>
+    <AddressBar>
       <p>
-        Your Address: <Bold>{connectedAddress.get()}</Bold>
+        me: <Bold>{connectedAddress.get()}</Bold>
       </p>
       <p>
-        Current block: <Bold>{currentBlock}</Bold>
+        when: <Bold>{currentBlock}</Bold>
       </p>
-    </div>
+    </AddressBar>
   );
 };
+
+const AddressBar = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  padding: var(--container-margin);
+`
 
 const Bold = styled.span`
   font-weight: bold;

@@ -36,13 +36,11 @@ const FullHeightDiv = styled.div`
 `;
 
 const Nav = styled.div`
-  padding: 8px 0px 16px 0px;
-  border-bottom: 2px solid black;
 `;
 
 const TopFlexRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: top;
-  padding: 24px;
+  padding: var(--container-margin);
 `;

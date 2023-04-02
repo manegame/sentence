@@ -1,6 +1,12 @@
+:root {
+  --margin: 1rem;
+  --container-margin: 1.5rem 2rem;
+}
+
 body {
   margin: 0;
   background: white;
+  font-family: 'Helvetica';
 }
 
 p {

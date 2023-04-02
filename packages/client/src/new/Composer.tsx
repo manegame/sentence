@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { useMUD } from "../MUDContext";
 import { useInput } from "../util";
+import strings from "../strings.json"
 
 export const Composer = () => {
   const {
@@ -42,12 +43,17 @@ export const Composer = () => {
 
   return (
     <ComposerContainer>
-      <p>Propose entry:</p>
+      {/* <Label>
+        {strings.propose}
+      </Label> */}
       {promptInput}
     </ComposerContainer>
   );
 };
 
-const ComposerContainer = styled.div`
-  margin-top: 24px;
+const ComposerContainer = styled.div`  
 `;
+
+const Label = styled.div`
+  display: block;
+`

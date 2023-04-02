@@ -1,62 +1,75 @@
-import styled from "styled-components";
-import { useMUD } from "../MUDContext";
+import styled from "styled-components"
 
-export const VotableEntry = ({ entry, entityId, votes }: { entry: string, entityId: string, votes: number }) => {
+import { useMUD } from "../MUDContext"
+
+export const ProposedEntry = ({
+  entry,
+  entityId,
+  votes,
+}: {
+  entry: string
+  entityId: string
+  votes: number
+}) => {
   const {
     network: { signer },
     worldSend,
-    world
-  } = useMUD();
+  } = useMUD()
 
   const vote = async () => {
     // Create a World contract instance
-    const s = signer.get();
-    if (!s) throw new Error("No signer");
+    const s = signer.get()
+    if (!s) throw new Error("No signer")
 
-    const tx = await worldSend("vote", [entityId]);
+    const tx = await worldSend("vote", [entityId])
 
-    console.log("proposeEntry tx", tx);
-    console.log("proposeEntry result", await tx.wait());
-  };
+    console.log("proposeEntry tx", tx)
+    console.log("proposeEntry result", await tx.wait())
+  }
   return (
     <ProposedEntryContainer>
+      <TextContainer>
+        {entry}
+      </TextContainer>
       <VotingContainer>
         <Clickable onClick={vote}>+</Clickable>
       </VotingContainer>
-      <TextContainer>{entry} ({votes})</TextContainer>
+      <Clickable>({votes})</Clickable>
     </ProposedEntryContainer>
-  );
-};
+  )
+}
 
 const ProposedEntryContainer = styled.div`
   background-color: #d9d9d9;
-  padding: 4px;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  margin: 4px 0px;
-`;
+  width: 100%;
+  padding: 10px 12px;
+`
 
 const VotingContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-right: 16px;
-`;
+`
 
-const TextContainer = styled.div``;
+const TextContainer = styled.div`
+width: 100%;`
 
 export const Clickable = styled.button`
-  background-color: Transparent;
+  background-color: transparent;
   background-repeat: no-repeat;
   border: none;
   cursor: pointer;
   overflow: hidden;
   outline: none;
   padding: 0px;
-  flex-shrink: 0;
+  flex-shrink: 1;
 
   :focus {
     outline: none;
   }
-`;
+`

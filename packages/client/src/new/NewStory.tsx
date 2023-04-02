@@ -7,7 +7,7 @@ import { useMUD } from "../MUDContext";
 
 import { Composer } from "./Composer";
 import { Story } from "./Story";
-import { VotableEntry } from "./VotableEntry";
+import { ProposedEntry as ProposedEntryComponent } from "./ProposedEntry";
 import { useEffect, useState } from "react";
 
 export const NewStory = () => {
@@ -50,18 +50,21 @@ export const NewStory = () => {
       });
     }
   }, [entries]);
+  
+  console.log('story ' ,story)
 
   return (
     <FlexColumn>
-      <h1 style={{ marginBottom: 24 }}>Current World</h1>
-      <Story worldName={story?.key} entries={[story?.sentence]}>
+      {/* <h1 style={{ marginBottom: 24 }}>@ </h1> */}
+      <Story worldName={`@ ${story?.key || ''}`} entries={[story?.sentence || '']}>
         <Composer />
         {/* Would be good to show some loading stuff here/handle empty case. */}
         {proposedEntries.length ? (
           proposedEntries.map((key) => {
             const proposal = getComponentValueStrict(ProposedEntry, key);
             const entityId = world.entities[key]
-            return <VotableEntry entry={proposal.sentence} entityId={entityId} votes={proposal.votes.length} key={entityId} />;
+            // return ''
+            return <ProposedEntryComponent entry={proposal.sentence} entityId={entityId} votes={proposal.votes.length} key={entityId} />;
           })
         ) : (
           <></>
@@ -76,4 +79,5 @@ const FlexColumn = styled.div`
   flex-direction: column;
   align-items: left;
   border-right: 2px solid black;
+  width: 500px;
 `;
