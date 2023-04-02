@@ -4,15 +4,24 @@ import { EntityIndex, Has, getComponentValueStrict } from "@latticexyz/recs";
 
 import { useMUD } from "../MUDContext";
 import { useInput } from "../util";
-import strings from "../strings.json"
+import strings from "../strings.json";
+import { useEntityQuery } from "@latticexyz/react";
 
-export const Composer = ({parentEntryKey}:{parentEntryKey:EntityIndex}) => {
+export const Composer = ({
+  parentEntryKey,
+}: {
+  parentEntryKey: EntityIndex;
+}) => {
   const {
     network: { signer },
+    components: { ProposalPeriod },
     worldSend,
-    world
+    world,
   } = useMUD();
   const [inputedPrompt, promptInput] = useInput({ type: "text" });
+  const [proposalTime, setProposalBlock] = useState<number>();
+
+  const periods = useEntityQuery([Has(ProposalPeriod)]);
 
   useEffect(() => {
     // Handle people hitting enter to submit.
@@ -27,6 +36,17 @@ export const Composer = ({parentEntryKey}:{parentEntryKey:EntityIndex}) => {
       document.removeEventListener("keydown", listener);
     };
   }, [inputedPrompt]);
+
+  useEffect(() => {
+    if (periods.length) {
+      const proposalTiming = getComponentValueStrict(
+        ProposalPeriod,
+        periods[0]
+      );
+      const proposalBlock = Number(proposalTiming.periodEndsBlock);
+      setProposalBlock(proposalBlock);
+    }
+  }, [periods]);
 
   const submit = async (prompt: string) => {
     // Write a ton of logic here:
@@ -46,18 +66,16 @@ export const Composer = ({parentEntryKey}:{parentEntryKey:EntityIndex}) => {
 
   return (
     <ComposerContainer>
-      {/* <Label>
-        {strings.propose}
-      </Label> */}
       {promptInput}
+      {proposalTime && <p>Propose by block: {proposalTime}</p>}
     </ComposerContainer>
   );
 };
 
 const ComposerContainer = styled.div`
-width: 100%;
+  width: 100%;
 `;
 
 const Label = styled.div`
   display: block;
-`
+`;
