@@ -17,20 +17,20 @@ import { EncodeArray } from "@latticexyz/store/src/tightcoder/EncodeArray.sol";
 import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 
-uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes16("story"))));
-uint256 constant StoryTableId = _tableId;
+uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes16("voteperiod"))));
+uint256 constant VotePeriodTableId = _tableId;
 
-struct StoryData {
-  uint256 startBlock;
-  string startPrompt;
+struct VotePeriodData {
+  uint256 periodStartsBlock;
+  uint256 periodEndsBlock;
 }
 
-library Story {
+library VotePeriod {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](2);
     _schema[0] = SchemaType.UINT256;
-    _schema[1] = SchemaType.STRING;
+    _schema[1] = SchemaType.UINT256;
 
     return SchemaLib.encode(_schema);
   }
@@ -45,9 +45,9 @@ library Story {
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](2);
-    _fieldNames[0] = "startBlock";
-    _fieldNames[1] = "startPrompt";
-    return ("Story", _fieldNames);
+    _fieldNames[0] = "periodStartsBlock";
+    _fieldNames[1] = "periodEndsBlock";
+    return ("VotePeriod", _fieldNames);
   }
 
   /** Register the table's schema */
@@ -72,8 +72,8 @@ library Story {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get startBlock */
-  function getStartBlock(bytes32 key) internal view returns (uint256 startBlock) {
+  /** Get periodStartsBlock */
+  function getPeriodStartsBlock(bytes32 key) internal view returns (uint256 periodStartsBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -81,8 +81,8 @@ library Story {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get startBlock (using the specified store) */
-  function getStartBlock(IStore _store, bytes32 key) internal view returns (uint256 startBlock) {
+  /** Get periodStartsBlock (using the specified store) */
+  function getPeriodStartsBlock(IStore _store, bytes32 key) internal view returns (uint256 periodStartsBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -90,74 +90,58 @@ library Story {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set startBlock */
-  function setStartBlock(bytes32 key, uint256 startBlock) internal {
+  /** Set periodStartsBlock */
+  function setPeriodStartsBlock(bytes32 key, uint256 periodStartsBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((startBlock)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((periodStartsBlock)));
   }
 
-  /** Set startBlock (using the specified store) */
-  function setStartBlock(IStore _store, bytes32 key, uint256 startBlock) internal {
+  /** Set periodStartsBlock (using the specified store) */
+  function setPeriodStartsBlock(IStore _store, bytes32 key, uint256 periodStartsBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((startBlock)));
+    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((periodStartsBlock)));
   }
 
-  /** Get startPrompt */
-  function getStartPrompt(bytes32 key) internal view returns (string memory startPrompt) {
+  /** Get periodEndsBlock */
+  function getPeriodEndsBlock(bytes32 key) internal view returns (uint256 periodEndsBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
-    return (string(_blob));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get startPrompt (using the specified store) */
-  function getStartPrompt(IStore _store, bytes32 key) internal view returns (string memory startPrompt) {
+  /** Get periodEndsBlock (using the specified store) */
+  function getPeriodEndsBlock(IStore _store, bytes32 key) internal view returns (uint256 periodEndsBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
-    return (string(_blob));
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set startPrompt */
-  function setStartPrompt(bytes32 key, string memory startPrompt) internal {
+  /** Set periodEndsBlock */
+  function setPeriodEndsBlock(bytes32 key, uint256 periodEndsBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 1, bytes((startPrompt)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((periodEndsBlock)));
   }
 
-  /** Set startPrompt (using the specified store) */
-  function setStartPrompt(IStore _store, bytes32 key, string memory startPrompt) internal {
+  /** Set periodEndsBlock (using the specified store) */
+  function setPeriodEndsBlock(IStore _store, bytes32 key, uint256 periodEndsBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 1, bytes((startPrompt)));
-  }
-
-  /** Push a slice to startPrompt */
-  function pushStartPrompt(bytes32 key, string memory _slice) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    StoreSwitch.pushToField(_tableId, _primaryKeys, 1, bytes((_slice)));
-  }
-
-  /** Push a slice to startPrompt (using the specified store) */
-  function pushStartPrompt(IStore _store, bytes32 key, string memory _slice) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    _store.pushToField(_tableId, _primaryKeys, 1, bytes((_slice)));
+    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((periodEndsBlock)));
   }
 
   /** Get the full data */
-  function get(bytes32 key) internal view returns (StoryData memory _table) {
+  function get(bytes32 key) internal view returns (VotePeriodData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -166,7 +150,7 @@ library Story {
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (StoryData memory _table) {
+  function get(IStore _store, bytes32 key) internal view returns (VotePeriodData memory _table) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -175,8 +159,8 @@ library Story {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, uint256 startBlock, string memory startPrompt) internal {
-    bytes memory _data = encode(startBlock, startPrompt);
+  function set(bytes32 key, uint256 periodStartsBlock, uint256 periodEndsBlock) internal {
+    bytes memory _data = encode(periodStartsBlock, periodEndsBlock);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -185,8 +169,8 @@ library Story {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, uint256 startBlock, string memory startPrompt) internal {
-    bytes memory _data = encode(startBlock, startPrompt);
+  function set(IStore _store, bytes32 key, uint256 periodStartsBlock, uint256 periodEndsBlock) internal {
+    bytes memory _data = encode(periodStartsBlock, periodEndsBlock);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -195,37 +179,25 @@ library Story {
   }
 
   /** Set the full data using the data struct */
-  function set(bytes32 key, StoryData memory _table) internal {
-    set(key, _table.startBlock, _table.startPrompt);
+  function set(bytes32 key, VotePeriodData memory _table) internal {
+    set(key, _table.periodStartsBlock, _table.periodEndsBlock);
   }
 
   /** Set the full data using the data struct (using the specified store) */
-  function set(IStore _store, bytes32 key, StoryData memory _table) internal {
-    set(_store, key, _table.startBlock, _table.startPrompt);
+  function set(IStore _store, bytes32 key, VotePeriodData memory _table) internal {
+    set(_store, key, _table.periodStartsBlock, _table.periodEndsBlock);
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal view returns (StoryData memory _table) {
-    // 32 is the total byte length of static data
-    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 32));
+  function decode(bytes memory _blob) internal pure returns (VotePeriodData memory _table) {
+    _table.periodStartsBlock = (uint256(Bytes.slice32(_blob, 0)));
 
-    _table.startBlock = (uint256(Bytes.slice32(_blob, 0)));
-
-    uint256 _start;
-    uint256 _end = 64;
-
-    _start = _end;
-    _end += _encodedLengths.atIndex(0);
-    _table.startPrompt = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+    _table.periodEndsBlock = (uint256(Bytes.slice32(_blob, 32)));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(uint256 startBlock, string memory startPrompt) internal view returns (bytes memory) {
-    uint16[] memory _counters = new uint16[](1);
-    _counters[0] = uint16(bytes(startPrompt).length);
-    PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
-
-    return abi.encodePacked(startBlock, _encodedLengths.unwrap(), bytes((startPrompt)));
+  function encode(uint256 periodStartsBlock, uint256 periodEndsBlock) internal view returns (bytes memory) {
+    return abi.encodePacked(periodStartsBlock, periodEndsBlock);
   }
 
   /* Delete all data for given keys */

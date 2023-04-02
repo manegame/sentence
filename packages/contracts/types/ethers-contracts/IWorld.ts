@@ -56,6 +56,7 @@ export interface IWorldInterface extends utils.Interface {
   functions: {
     "call(bytes16,bytes16,bytes)": FunctionFragment;
     "countVotes(bytes32)": FunctionFragment;
+    "createStory()": FunctionFragment;
     "deleteRecord(uint256,bytes32[])": FunctionFragment;
     "deleteRecord(bytes16,bytes16,bytes32[])": FunctionFragment;
     "getCurrentlyProposing(bytes32)": FunctionFragment;
@@ -90,6 +91,7 @@ export interface IWorldInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "call"
       | "countVotes"
+      | "createStory"
       | "deleteRecord(uint256,bytes32[])"
       | "deleteRecord(bytes16,bytes16,bytes32[])"
       | "getCurrentlyProposing"
@@ -131,6 +133,10 @@ export interface IWorldInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "countVotes",
     values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createStory",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "deleteRecord(uint256,bytes32[])",
@@ -303,6 +309,10 @@ export interface IWorldInterface extends utils.Interface {
 
   decodeFunctionResult(functionFragment: "call", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "countVotes", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "createStory",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "deleteRecord(uint256,bytes32[])",
     data: BytesLike
@@ -488,6 +498,10 @@ export interface IWorld extends BaseContract {
 
     countVotes(
       parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    createStory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -680,6 +694,10 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  createStory(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   "deleteRecord(uint256,bytes32[])"(
     table: PromiseOrValue<BigNumberish>,
     key: PromiseOrValue<BytesLike>[],
@@ -868,6 +886,8 @@ export interface IWorld extends BaseContract {
       parentKey: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<ProposedEntryDataStructOutput>;
+
+    createStory(overrides?: CallOverrides): Promise<void>;
 
     "deleteRecord(uint256,bytes32[])"(
       table: PromiseOrValue<BigNumberish>,
@@ -1091,6 +1111,10 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    createStory(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     "deleteRecord(uint256,bytes32[])"(
       table: PromiseOrValue<BigNumberish>,
       key: PromiseOrValue<BytesLike>[],
@@ -1278,6 +1302,10 @@ export interface IWorld extends BaseContract {
 
     countVotes(
       parentKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    createStory(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

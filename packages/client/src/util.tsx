@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export const getParameterByName = (name: any, url = window.location.href) => {
   const paramName = name.replace(/[\]]/g, "\\$&");
   const regex = new RegExp(`[?&]${paramName}(=([^&#]*)|&|#|$)`);
@@ -12,4 +14,17 @@ export const getParameterByName = (name: any, url = window.location.href) => {
   }
 
   return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+
+export const useInput = ({ type }: { type: string }) => {
+  const [value, setValue] = useState("");
+
+  const input = (
+    <input
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      type={type}
+    />
+  );
+  return [value, input];
 };

@@ -5,45 +5,38 @@ export default mudConfig({
   overrideSystems: {
     ProposeEntrySystem: {
       fileSelector: "proposalssystem",
-      openAccess: true
+      openAccess: true,
     },
   },
   tables: {
-    Story: {
-      fileSelector: "story",
-      schema: {
-        startBlock: "uint256",
-        startPrompt: "string",
-      }
-    },
     Entry: {
       fileSelector: "entry",
       schema: {
-        parentKey: "bytes32",
+        parent: "address",
         proposer: "address",
-        proposals: "bytes32[]"
-      }
+        sentence: "string",
+      },
     },
     ProposedEntry: {
-      fileSelector: "proposedentries",
+      fileSelector: "proposedentry",
       schema: {
         parentKey: "bytes32",
         proposedOnBlock: "uint256",
         timestamp: "uint256",
         proposer: "address",
         sentence: "string",
-        votes:"address[]"
+        votes: "address[]",
       },
     },
-    NewEntryPeriod: {
-      fileSelector: "newentryperiod",
+    EntryPeriod: {
+      fileSelector: "entryperiod",
       schema: {
         periodStartsBlock: "uint256",
         periodEndsBlock: "uint256"
       }
     },
-    NewVotePeriod: {
-      fileSelector: "newvoteperiod",
+    VotePeriod: {
+      fileSelector: "voteperiod",
       schema: {
         periodStartsBlock: "uint256",
         periodEndsBlock: "uint256"
