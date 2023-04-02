@@ -28,6 +28,12 @@ export default mudConfig({
         votes: "address[]",
       },
     },
+    ParentEntry: {
+      fileSelector: "parententry",
+      schema: {
+        parentKey: "bytes32"
+      }
+    },
     EntryPeriod: {
       fileSelector: "entryperiod",
       schema: {
@@ -43,5 +49,11 @@ export default mudConfig({
       }
     }
   },
-  modules: [],
+  modules: [
+    {
+      name: "KeysWithValueModule",
+      root: true,
+      args: [resolveTableId("ParentEntry")],
+    },
+  ],
 });

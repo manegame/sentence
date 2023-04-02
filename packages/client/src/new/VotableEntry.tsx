@@ -13,15 +13,7 @@ export const VotableEntry = ({ entry, entityId, votes }: { entry: string, entity
     const s = signer.get();
     if (!s) throw new Error("No signer");
 
-    // const convertedKey = key.padEnd(66, "0")
-
     const tx = await worldSend("vote", [entityId]);
-
-    // if (inputRef.current) {
-    //   inputRef.current.value = "";
-    // }
-
-    // Reset input value
 
     console.log("proposeEntry tx", tx);
     console.log("proposeEntry result", await tx.wait());

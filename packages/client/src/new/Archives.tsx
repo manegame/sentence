@@ -67,13 +67,13 @@ const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
+  margin-left: 24px;
 `;
 
 const ArchivesWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: top;
-  margin-left: 24px;
 `;
 
 const StoryWrapper = styled.div`
