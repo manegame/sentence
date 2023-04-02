@@ -54,7 +54,8 @@ export const Composer = ({parentEntryKey}:{parentEntryKey:EntityIndex}) => {
   );
 };
 
-const ComposerContainer = styled.div`  
+const ComposerContainer = styled.div`
+width: 100%;
 `;
 
 const Label = styled.div`

@@ -32,8 +32,8 @@ export const useInput = ({ type }: { type: string }) => {
 
 const StyledInput = styled.textarea`
   background-color: #ff0;
-  width: 100%;
   padding: 10px 12px;
   font-size: 16px;
+  width: 100%;
   font-family: "Helvetica";
 `

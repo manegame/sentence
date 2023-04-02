@@ -42,10 +42,10 @@ export const App = () => {
       <Nav>
         <PlayerData />
       </Nav>
-      <TopFlexRow>
+      <MainLayout>
         <NewStory />
         <Archives />
-      </TopFlexRow>
+      </MainLayout>
       <WelcomeModal />
       <NoWorldModal />
     </FullHeightDiv>
@@ -61,8 +61,9 @@ const FullHeightDiv = styled.div`
 const Nav = styled.div`
 `;
 
-const TopFlexRow = styled.div`
-  display: flex;
+const MainLayout = styled.div`
+  display: grid;
+  grid-template-columns: 500px 1fr;
   flex-direction: row;
   align-items: top;
   padding: var(--container-margin);

@@ -26,8 +26,5 @@ export const Story = ({
 };
 
 const StoryWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin-right: calc(var(--margin) * 2);
+  width: 100%;
 `;
