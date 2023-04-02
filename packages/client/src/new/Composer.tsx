@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { EntityIndex, Has, getComponentValueStrict } from "@latticexyz/recs";
 
 import { useMUD } from "../MUDContext";
 import { useInput } from "../util";
 import strings from "../strings.json"
 
-export const Composer = () => {
+export const Composer = ({parentEntryKey}:{parentEntryKey:EntityIndex}) => {
   const {
     network: { signer },
     worldSend,
+    world
   } = useMUD();
   const [inputedPrompt, promptInput] = useInput({ type: "text" });
 
@@ -34,8 +36,9 @@ export const Composer = () => {
     // Create a World contract instance
     const s = signer.get();
     if (!s) throw new Error("No signer");
+    const parentEntityId = world.entities[parentEntryKey];
 
-    const tx = await worldSend("proposeEntry", [prompt]);
+    const tx = await worldSend("proposeEntry", [parentEntityId, prompt]);
 
     console.log("proposeEntry tx", tx);
     console.log("proposeEntry result", await tx.wait());

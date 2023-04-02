@@ -35,6 +35,7 @@ export const AddProposal = () => {
     const newString: string = inputedPrompt as string;
     console.log(newString);
 
+    //need to get parent key here
     const tx = await worldSend("proposeEntry", [newString]);
 
     // if (inputRef.current) {

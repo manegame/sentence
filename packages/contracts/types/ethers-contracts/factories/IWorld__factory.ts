@@ -218,26 +218,7 @@ const _abi = [
         type: "bytes32",
       },
     ],
-    name: "getCurrentlyProposing",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "parentKey",
-        type: "bytes32",
-      },
-    ],
-    name: "getCurrentlyVoting",
+    name: "getCurrentlyActive",
     outputs: [
       {
         internalType: "bool",
@@ -497,6 +478,11 @@ const _abi = [
   },
   {
     inputs: [
+      {
+        internalType: "bytes32",
+        name: "parentKey",
+        type: "bytes32",
+      },
       {
         internalType: "string",
         name: "entry",
@@ -790,25 +776,6 @@ const _abi = [
     ],
     name: "setRecord",
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "parentKey",
-        type: "bytes32",
-      },
-    ],
-    name: "setVotingTime",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
     stateMutability: "nonpayable",
     type: "function",
   },
