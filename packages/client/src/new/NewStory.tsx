@@ -61,7 +61,7 @@ export const NewStory = () => {
           proposedEntries.map((key) => {
             const proposal = getComponentValueStrict(ProposedEntry, key);
             const entityId = world.entities[key]
-            return <VotableEntry entry={proposal.sentence} entityId={entityId} votes={proposal.votes.length} />;
+            return <VotableEntry entry={proposal.sentence} entityId={entityId} votes={proposal.votes.length} key={entityId} />;
           })
         ) : (
           <></>
