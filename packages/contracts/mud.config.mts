@@ -9,6 +9,12 @@ export default mudConfig({
     },
   },
   tables: {
+    Story: {
+      fileSelector: "story",
+      schema: {
+        archived: "bool",
+      },
+    },
     Entry: {
       fileSelector: "entry",
       schema: {
@@ -17,10 +23,16 @@ export default mudConfig({
         sentence: "string",
       },
     },
+    ParentStory: {
+      fileSelector: "parentstory",
+      schema: {
+        parentKey: "bytes32",
+      },
+    },
     ProposedEntry: {
       fileSelector: "proposedentry",
       schema: {
-        parentKey: "bytes32",
+        parentKey: "bytes32", // Can get rid of this
         proposedOnBlock: "uint256",
         timestamp: "uint256",
         proposer: "address",
@@ -31,29 +43,26 @@ export default mudConfig({
     ParentEntry: {
       fileSelector: "parententry",
       schema: {
-        parentKey: "bytes32"
-      }
+        parentKey: "bytes32",
+      },
     },
-    EntryPeriod: {
-      fileSelector: "entryperiod",
+    ProposalPeriod: {
+      fileSelector: "proposalperiod",
       schema: {
-        periodStartsBlock: "uint256",
-        periodEndsBlock: "uint256"
-      }
+        periodEndsBlock: "uint256",
+      },
     },
-    VotePeriod: {
-      fileSelector: "voteperiod",
-      schema: {
-        periodStartsBlock: "uint256",
-        periodEndsBlock: "uint256"
-      }
-    }
   },
   modules: [
     {
       name: "KeysWithValueModule",
       root: true,
       args: [resolveTableId("ParentEntry")],
+    },
+    {
+      name: "KeysWithValueModule",
+      root: true,
+      args: [resolveTableId("ParentStory")],
     },
   ],
 });
