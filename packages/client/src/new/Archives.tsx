@@ -30,36 +30,50 @@ export const Archives = () => {
     // of parent addresses.
 
     console.log("A new top level Entry (story) has appeared.");
+    // Remove newest story.
+    if (entities.length > 1) {
+      const olderStories = [...entities.slice(0, -1)];
 
-    const newStories = entities.map((ent) => {
-      const { parent, proposer, sentence } = getComponentValueStrict(
-        Entry,
-        ent
-      );
-      return {
-        key: ent,
-        parent,
-        proposer,
-        sentence,
-      };
-    });
+      const archivedStories = olderStories.map((ent) => {
+        const { parent, proposer, sentence } = getComponentValueStrict(
+          Entry,
+          ent
+        );
+        return {
+          key: ent,
+          parent,
+          proposer,
+          sentence,
+        };
+      });
 
-    setStories(newStories);
+      setStories(archivedStories);
+    }
   }, [entities]);
 
   return (
-    <ArchivesWrapper>
-      {stories.reverse().map((story) => (
-        <Story worldName={story.key} entries={[story.sentence]} />
-      ))}
-    </ArchivesWrapper>
+    <FlexColumn>
+      <h1 style={{ marginBottom: 24 }}>Explore older worlds</h1>
+      <ArchivesWrapper>
+        {stories.reverse().map((story) => (
+          <Story worldName={story.key} entries={[story.sentence]} />
+        ))}
+      </ArchivesWrapper>
+    </FlexColumn>
   );
 };
+
+const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+`;
 
 const ArchivesWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: top;
+  margin-left: 24px;
 `;
 
 const StoryWrapper = styled.div`

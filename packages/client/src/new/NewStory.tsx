@@ -1,39 +1,63 @@
 import styled from "styled-components";
 
 import { useEntityQuery } from "@latticexyz/react";
-import { Has, getComponentValueStrict } from "@latticexyz/recs";
+import { EntityIndex, Has, getComponentValueStrict } from "@latticexyz/recs";
 
 import { useMUD } from "../MUDContext";
 
 import { Composer } from "./Composer";
 import { Story } from "./Story";
 import { VotableEntry } from "./VotableEntry";
+import { useEffect, useState } from "react";
 
 export const NewStory = () => {
   const {
-    components: { ProposedEntry },
+    components: { ProposedEntry, Entry },
   } = useMUD();
+  const [story, setCurrentStory] = useState<{
+    key: EntityIndex;
+    parent: string;
+    proposer: string;
+    sentence: string;
+  }>();
 
-  const entities = useEntityQuery([Has(ProposedEntry)]);
-  const getCurrentStoryEntries = () => {
-    // Go to blockchain for this.
-    // Return array of entries.
-    return ["Imagine a nation based upon water..."];
-  };
+  // Update this to only grab Entry where parent = address(0)
+  const entries = useEntityQuery([Has(Entry)]);
+  const proposedEntries = useEntityQuery([Has(ProposedEntry)]);
 
-  const getCurrentEntryProposals = () => {
-    //
-    return [];
-  };
+  useEffect(() => {
+    // Updates everytime a new story is detected.
+
+    // Builds the stories state object, meaning, it has to do the recursive DB pull
+    // of parent addresses.
+
+    console.log("A new top level Entry (story) has appeared.");
+    // Only care about newest story
+    if (entries.length) {
+      const [currentStory] = entries.reverse();
+      const { parent, proposer, sentence } = getComponentValueStrict(
+        Entry,
+        currentStory
+      );
+
+      setCurrentStory({
+        key: currentStory,
+        parent,
+        proposer,
+        sentence,
+      });
+    }
+  }, [entries]);
 
   return (
     <FlexColumn>
-      <Story worldName="new world" entries={getCurrentStoryEntries()}>
+      <h1 style={{ marginBottom: 24 }}>Current World</h1>
+      <Story worldName={story?.key} entries={[story?.sentence]}>
         <Composer />
         {/* Would be good to show some loading stuff here/handle empty case. */}
-        {entities.length ? (
-          entities.map((ent) => {
-            const proposal = getComponentValueStrict(ProposedEntry, ent);
+        {proposedEntries.length ? (
+          proposedEntries.map((proposals) => {
+            const proposal = getComponentValueStrict(ProposedEntry, proposals);
             return <VotableEntry entry={proposal.sentence} />;
           })
         ) : (
@@ -48,4 +72,5 @@ const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
+  border-right: 2px solid black;
 `;
