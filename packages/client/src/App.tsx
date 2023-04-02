@@ -8,6 +8,9 @@ import { ShowBlock } from "./BlockCounter";
 import { Proposals } from "./Proposals";
 import { AddProposal } from "./AddProposal";
 
+import { getParameterByName } from "./util";
+import { ShowBlock } from "./BlockCounter";
+
 export const App = () => {
   const [showIntro, setShowIntro] = useState(true);
 
