@@ -21,8 +21,8 @@ uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes1
 uint256 constant StoryTableId = _tableId;
 
 struct StoryData {
-  uint256 id;
-  uint256 lastProposalId;
+  uint256 startBlock;
+  string startPrompt;
 }
 
 library Story {
@@ -30,7 +30,7 @@ library Story {
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](2);
     _schema[0] = SchemaType.UINT256;
-    _schema[1] = SchemaType.UINT256;
+    _schema[1] = SchemaType.STRING;
 
     return SchemaLib.encode(_schema);
   }
@@ -45,8 +45,8 @@ library Story {
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](2);
-    _fieldNames[0] = "id";
-    _fieldNames[1] = "lastProposalId";
+    _fieldNames[0] = "startBlock";
+    _fieldNames[1] = "startPrompt";
     return ("Story", _fieldNames);
   }
 
@@ -72,8 +72,8 @@ library Story {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get id */
-  function getId(bytes32 key) internal view returns (uint256 id) {
+  /** Get startBlock */
+  function getStartBlock(bytes32 key) internal view returns (uint256 startBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -81,8 +81,8 @@ library Story {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Get id (using the specified store) */
-  function getId(IStore _store, bytes32 key) internal view returns (uint256 id) {
+  /** Get startBlock (using the specified store) */
+  function getStartBlock(IStore _store, bytes32 key) internal view returns (uint256 startBlock) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -90,54 +90,70 @@ library Story {
     return (uint256(Bytes.slice32(_blob, 0)));
   }
 
-  /** Set id */
-  function setId(bytes32 key, uint256 id) internal {
+  /** Set startBlock */
+  function setStartBlock(bytes32 key, uint256 startBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((startBlock)));
   }
 
-  /** Set id (using the specified store) */
-  function setId(IStore _store, bytes32 key, uint256 id) internal {
+  /** Set startBlock (using the specified store) */
+  function setStartBlock(IStore _store, bytes32 key, uint256 startBlock) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
+    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((startBlock)));
   }
 
-  /** Get lastProposalId */
-  function getLastProposalId(bytes32 key) internal view returns (uint256 lastProposalId) {
+  /** Get startPrompt */
+  function getStartPrompt(bytes32 key) internal view returns (string memory startPrompt) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (string(_blob));
   }
 
-  /** Get lastProposalId (using the specified store) */
-  function getLastProposalId(IStore _store, bytes32 key) internal view returns (uint256 lastProposalId) {
+  /** Get startPrompt (using the specified store) */
+  function getStartPrompt(IStore _store, bytes32 key) internal view returns (string memory startPrompt) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (string(_blob));
   }
 
-  /** Set lastProposalId */
-  function setLastProposalId(bytes32 key, uint256 lastProposalId) internal {
+  /** Set startPrompt */
+  function setStartPrompt(bytes32 key, string memory startPrompt) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((lastProposalId)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 1, bytes((startPrompt)));
   }
 
-  /** Set lastProposalId (using the specified store) */
-  function setLastProposalId(IStore _store, bytes32 key, uint256 lastProposalId) internal {
+  /** Set startPrompt (using the specified store) */
+  function setStartPrompt(IStore _store, bytes32 key, string memory startPrompt) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((lastProposalId)));
+    _store.setField(_tableId, _primaryKeys, 1, bytes((startPrompt)));
+  }
+
+  /** Push a slice to startPrompt */
+  function pushStartPrompt(bytes32 key, string memory _slice) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    StoreSwitch.pushToField(_tableId, _primaryKeys, 1, bytes((_slice)));
+  }
+
+  /** Push a slice to startPrompt (using the specified store) */
+  function pushStartPrompt(IStore _store, bytes32 key, string memory _slice) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.pushToField(_tableId, _primaryKeys, 1, bytes((_slice)));
   }
 
   /** Get the full data */
@@ -159,8 +175,8 @@ library Story {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, uint256 id, uint256 lastProposalId) internal {
-    bytes memory _data = encode(id, lastProposalId);
+  function set(bytes32 key, uint256 startBlock, string memory startPrompt) internal {
+    bytes memory _data = encode(startBlock, startPrompt);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -169,8 +185,8 @@ library Story {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, uint256 id, uint256 lastProposalId) internal {
-    bytes memory _data = encode(id, lastProposalId);
+  function set(IStore _store, bytes32 key, uint256 startBlock, string memory startPrompt) internal {
+    bytes memory _data = encode(startBlock, startPrompt);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -180,24 +196,36 @@ library Story {
 
   /** Set the full data using the data struct */
   function set(bytes32 key, StoryData memory _table) internal {
-    set(key, _table.id, _table.lastProposalId);
+    set(key, _table.startBlock, _table.startPrompt);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, bytes32 key, StoryData memory _table) internal {
-    set(_store, key, _table.id, _table.lastProposalId);
+    set(_store, key, _table.startBlock, _table.startPrompt);
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal pure returns (StoryData memory _table) {
-    _table.id = (uint256(Bytes.slice32(_blob, 0)));
+  function decode(bytes memory _blob) internal view returns (StoryData memory _table) {
+    // 32 is the total byte length of static data
+    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 32));
 
-    _table.lastProposalId = (uint256(Bytes.slice32(_blob, 32)));
+    _table.startBlock = (uint256(Bytes.slice32(_blob, 0)));
+
+    uint256 _start;
+    uint256 _end = 64;
+
+    _start = _end;
+    _end += _encodedLengths.atIndex(0);
+    _table.startPrompt = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(uint256 id, uint256 lastProposalId) internal view returns (bytes memory) {
-    return abi.encodePacked(id, lastProposalId);
+  function encode(uint256 startBlock, string memory startPrompt) internal view returns (bytes memory) {
+    uint16[] memory _counters = new uint16[](1);
+    _counters[0] = uint16(bytes(startPrompt).length);
+    PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
+
+    return abi.encodePacked(startBlock, _encodedLengths.unwrap(), bytes((startPrompt)));
   }
 
   /* Delete all data for given keys */

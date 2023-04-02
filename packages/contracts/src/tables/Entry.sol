@@ -21,20 +21,18 @@ uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes1
 uint256 constant EntryTableId = _tableId;
 
 struct EntryData {
-  uint256 id;
-  uint256 storyId;
-  uint256 parentId;
+  bytes32 parentKey;
   address proposer;
+  bytes32[] proposals;
 }
 
 library Entry {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](4);
-    _schema[0] = SchemaType.UINT256;
-    _schema[1] = SchemaType.UINT256;
-    _schema[2] = SchemaType.UINT256;
-    _schema[3] = SchemaType.ADDRESS;
+    SchemaType[] memory _schema = new SchemaType[](3);
+    _schema[0] = SchemaType.BYTES32;
+    _schema[1] = SchemaType.ADDRESS;
+    _schema[2] = SchemaType.BYTES32_ARRAY;
 
     return SchemaLib.encode(_schema);
   }
@@ -48,11 +46,10 @@ library Entry {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](4);
-    _fieldNames[0] = "id";
-    _fieldNames[1] = "storyId";
-    _fieldNames[2] = "parentId";
-    _fieldNames[3] = "proposer";
+    string[] memory _fieldNames = new string[](3);
+    _fieldNames[0] = "parentKey";
+    _fieldNames[1] = "proposer";
+    _fieldNames[2] = "proposals";
     return ("Entry", _fieldNames);
   }
 
@@ -78,106 +75,38 @@ library Entry {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get id */
-  function getId(bytes32 key) internal view returns (uint256 id) {
+  /** Get parentKey */
+  function getParentKey(bytes32 key) internal view returns (bytes32 parentKey) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 0);
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (Bytes.slice32(_blob, 0));
   }
 
-  /** Get id (using the specified store) */
-  function getId(IStore _store, bytes32 key) internal view returns (uint256 id) {
+  /** Get parentKey (using the specified store) */
+  function getParentKey(IStore _store, bytes32 key) internal view returns (bytes32 parentKey) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 0);
-    return (uint256(Bytes.slice32(_blob, 0)));
+    return (Bytes.slice32(_blob, 0));
   }
 
-  /** Set id */
-  function setId(bytes32 key, uint256 id) internal {
+  /** Set parentKey */
+  function setParentKey(bytes32 key, bytes32 parentKey) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 0, abi.encodePacked((parentKey)));
   }
 
-  /** Set id (using the specified store) */
-  function setId(IStore _store, bytes32 key, uint256 id) internal {
+  /** Set parentKey (using the specified store) */
+  function setParentKey(IStore _store, bytes32 key, bytes32 parentKey) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((id)));
-  }
-
-  /** Get storyId */
-  function getStoryId(bytes32 key) internal view returns (uint256 storyId) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
-    return (uint256(Bytes.slice32(_blob, 0)));
-  }
-
-  /** Get storyId (using the specified store) */
-  function getStoryId(IStore _store, bytes32 key) internal view returns (uint256 storyId) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
-    return (uint256(Bytes.slice32(_blob, 0)));
-  }
-
-  /** Set storyId */
-  function setStoryId(bytes32 key, uint256 storyId) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((storyId)));
-  }
-
-  /** Set storyId (using the specified store) */
-  function setStoryId(IStore _store, bytes32 key, uint256 storyId) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((storyId)));
-  }
-
-  /** Get parentId */
-  function getParentId(bytes32 key) internal view returns (uint256 parentId) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 2);
-    return (uint256(Bytes.slice32(_blob, 0)));
-  }
-
-  /** Get parentId (using the specified store) */
-  function getParentId(IStore _store, bytes32 key) internal view returns (uint256 parentId) {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 2);
-    return (uint256(Bytes.slice32(_blob, 0)));
-  }
-
-  /** Set parentId */
-  function setParentId(bytes32 key, uint256 parentId) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    StoreSwitch.setField(_tableId, _primaryKeys, 2, abi.encodePacked((parentId)));
-  }
-
-  /** Set parentId (using the specified store) */
-  function setParentId(IStore _store, bytes32 key, uint256 parentId) internal {
-    bytes32[] memory _primaryKeys = new bytes32[](1);
-    _primaryKeys[0] = bytes32((key));
-
-    _store.setField(_tableId, _primaryKeys, 2, abi.encodePacked((parentId)));
+    _store.setField(_tableId, _primaryKeys, 0, abi.encodePacked((parentKey)));
   }
 
   /** Get proposer */
@@ -185,7 +114,7 @@ library Entry {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 1);
     return (address(Bytes.slice20(_blob, 0)));
   }
 
@@ -194,7 +123,7 @@ library Entry {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 3);
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 1);
     return (address(Bytes.slice20(_blob, 0)));
   }
 
@@ -203,7 +132,7 @@ library Entry {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    StoreSwitch.setField(_tableId, _primaryKeys, 3, abi.encodePacked((proposer)));
+    StoreSwitch.setField(_tableId, _primaryKeys, 1, abi.encodePacked((proposer)));
   }
 
   /** Set proposer (using the specified store) */
@@ -211,7 +140,57 @@ library Entry {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
-    _store.setField(_tableId, _primaryKeys, 3, abi.encodePacked((proposer)));
+    _store.setField(_tableId, _primaryKeys, 1, abi.encodePacked((proposer)));
+  }
+
+  /** Get proposals */
+  function getProposals(bytes32 key) internal view returns (bytes32[] memory proposals) {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 2);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+  }
+
+  /** Get proposals (using the specified store) */
+  function getProposals(IStore _store, bytes32 key) internal view returns (bytes32[] memory proposals) {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    bytes memory _blob = _store.getField(_tableId, _primaryKeys, 2);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_bytes32());
+  }
+
+  /** Set proposals */
+  function setProposals(bytes32 key, bytes32[] memory proposals) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    StoreSwitch.setField(_tableId, _primaryKeys, 2, EncodeArray.encode((proposals)));
+  }
+
+  /** Set proposals (using the specified store) */
+  function setProposals(IStore _store, bytes32 key, bytes32[] memory proposals) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.setField(_tableId, _primaryKeys, 2, EncodeArray.encode((proposals)));
+  }
+
+  /** Push an element to proposals */
+  function pushProposals(bytes32 key, bytes32 _element) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    StoreSwitch.pushToField(_tableId, _primaryKeys, 2, abi.encodePacked((_element)));
+  }
+
+  /** Push an element to proposals (using the specified store) */
+  function pushProposals(IStore _store, bytes32 key, bytes32 _element) internal {
+    bytes32[] memory _primaryKeys = new bytes32[](1);
+    _primaryKeys[0] = bytes32((key));
+
+    _store.pushToField(_tableId, _primaryKeys, 2, abi.encodePacked((_element)));
   }
 
   /** Get the full data */
@@ -233,8 +212,8 @@ library Entry {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, uint256 id, uint256 storyId, uint256 parentId, address proposer) internal {
-    bytes memory _data = encode(id, storyId, parentId, proposer);
+  function set(bytes32 key, bytes32 parentKey, address proposer, bytes32[] memory proposals) internal {
+    bytes memory _data = encode(parentKey, proposer, proposals);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -243,8 +222,8 @@ library Entry {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, uint256 id, uint256 storyId, uint256 parentId, address proposer) internal {
-    bytes memory _data = encode(id, storyId, parentId, proposer);
+  function set(IStore _store, bytes32 key, bytes32 parentKey, address proposer, bytes32[] memory proposals) internal {
+    bytes memory _data = encode(parentKey, proposer, proposals);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
@@ -254,33 +233,42 @@ library Entry {
 
   /** Set the full data using the data struct */
   function set(bytes32 key, EntryData memory _table) internal {
-    set(key, _table.id, _table.storyId, _table.parentId, _table.proposer);
+    set(key, _table.parentKey, _table.proposer, _table.proposals);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, bytes32 key, EntryData memory _table) internal {
-    set(_store, key, _table.id, _table.storyId, _table.parentId, _table.proposer);
+    set(_store, key, _table.parentKey, _table.proposer, _table.proposals);
   }
 
   /** Decode the tightly packed blob using this table's schema */
-  function decode(bytes memory _blob) internal pure returns (EntryData memory _table) {
-    _table.id = (uint256(Bytes.slice32(_blob, 0)));
+  function decode(bytes memory _blob) internal view returns (EntryData memory _table) {
+    // 52 is the total byte length of static data
+    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 52));
 
-    _table.storyId = (uint256(Bytes.slice32(_blob, 32)));
+    _table.parentKey = (Bytes.slice32(_blob, 0));
 
-    _table.parentId = (uint256(Bytes.slice32(_blob, 64)));
+    _table.proposer = (address(Bytes.slice20(_blob, 32)));
 
-    _table.proposer = (address(Bytes.slice20(_blob, 96)));
+    uint256 _start;
+    uint256 _end = 84;
+
+    _start = _end;
+    _end += _encodedLengths.atIndex(0);
+    _table.proposals = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_bytes32());
   }
 
   /** Tightly pack full data using this table's schema */
   function encode(
-    uint256 id,
-    uint256 storyId,
-    uint256 parentId,
-    address proposer
+    bytes32 parentKey,
+    address proposer,
+    bytes32[] memory proposals
   ) internal view returns (bytes memory) {
-    return abi.encodePacked(id, storyId, parentId, proposer);
+    uint16[] memory _counters = new uint16[](1);
+    _counters[0] = uint16(proposals.length * 32);
+    PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
+
+    return abi.encodePacked(parentKey, proposer, _encodedLengths.unwrap(), EncodeArray.encode((proposals)));
   }
 
   /* Delete all data for given keys */

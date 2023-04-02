@@ -1,4 +1,5 @@
 import { mudConfig, resolveTableId } from "@latticexyz/cli";
+// import { ProposedEntry, ProposedEntryData } from "./src/tables/ProposedEntry.sol";
 
 export default mudConfig({
   overrideSystems: {
@@ -11,25 +12,22 @@ export default mudConfig({
     Story: {
       fileSelector: "story",
       schema: {
-        id: "uint256",
-        lastProposalId: "uint256" // should this be last entry id?
+        startBlock: "uint256",
+        startPrompt: "string",
       }
     },
     Entry: {
       fileSelector: "entry",
       schema: {
-        id: "uint256",
-        storyId: "uint256",
-        parentId: "uint256",
-        proposer: "address"
+        parentKey: "bytes32",
+        proposer: "address",
+        proposals: "bytes32[]"
       }
     },
     ProposedEntry: {
       fileSelector: "proposedentries",
       schema: {
-        id: "uint256",
-        storyId: "uint256",
-        parentBlock: "uint256",
+        parentKey: "bytes32",
         proposedOnBlock: "uint256",
         timestamp: "uint256",
         proposer: "address",
@@ -40,17 +38,15 @@ export default mudConfig({
     NewEntryPeriod: {
       fileSelector: "newentryperiod",
       schema: {
-        id: "uint256",
-        parentBlock: "uint256",
+        periodStartsBlock: "uint256",
         periodEndsBlock: "uint256"
       }
     },
     NewVotePeriod: {
       fileSelector: "newvoteperiod",
       schema: {
-        id: "uint256",
-        parentBlock: "uint256",
-        perioSdEndsBlock: "uint256"
+        periodStartsBlock: "uint256",
+        periodEndsBlock: "uint256"
       }
     }
   },

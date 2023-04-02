@@ -10,8 +10,8 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          lastProposalId: RecsType.BigInt,
+          startBlock: RecsType.BigInt,
+          startPrompt: RecsType.String,
         },
         {
           metadata: {
@@ -26,10 +26,9 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          storyId: RecsType.BigInt,
-          parentId: RecsType.BigInt,
+          parentKey: RecsType.String,
           proposer: RecsType.String,
+          proposals: RecsType.BigIntArray,
         },
         {
           metadata: {
@@ -44,9 +43,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          storyId: RecsType.BigInt,
-          parentId: RecsType.BigInt,
+          parentKey: RecsType.String,
           proposedOnBlock: RecsType.BigInt,
           timestamp: RecsType.BigInt,
           proposer: RecsType.String,
@@ -66,8 +63,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          parentBlock: RecsType.BigInt,
+          periodStartsBlock: RecsType.BigInt,
           periodEndsBlock: RecsType.BigInt,
         },
         {
@@ -83,9 +79,8 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.BigInt,
-          parentBlock: RecsType.BigInt,
-          perioSdEndsBlock: RecsType.BigInt,
+          periodStartsBlock: RecsType.BigInt,
+          periodEndsBlock: RecsType.BigInt,
         },
         {
           metadata: {
