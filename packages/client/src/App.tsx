@@ -12,8 +12,31 @@ import { PlayerData } from "./new/PlayerData";
 import { WelcomeModal } from "./new/WelcomeModal";
 import { NewStory } from "./new/NewStory";
 import { NoWorldModal } from "./new/NoWorldModal";
+import { useMUD } from "./MUDContext";
+import { useEntityQuery } from "@latticexyz/react";
+import { Has, getComponentValueStrict } from "@latticexyz/recs";
 
 export const App = () => {
+  const {
+    components: { Entry, Story, ProposalPeriod },
+  } = useMUD();
+
+  const entries1 = useEntityQuery([Has(Entry)]);
+  const entries2 = useEntityQuery([Has(Story)]);
+  const entries3 = useEntityQuery([Has(ProposalPeriod)]);
+
+  if (entries1.length) {
+    console.log(getComponentValueStrict(Entry, entries1[0]));
+  }
+
+  if (entries2.length) {
+    console.log(getComponentValueStrict(Story, entries2[0]));
+  }
+
+  if (entries3.length) {
+    console.log(getComponentValueStrict(ProposalPeriod, entries3[0]));
+  }
+
   return (
     <FullHeightDiv>
       <Nav>

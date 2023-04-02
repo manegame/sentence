@@ -68,7 +68,6 @@ export interface IWorldInterface extends utils.Interface {
     "getSchema(uint256)": FunctionFragment;
     "grantAccess(bytes16,address)": FunctionFragment;
     "grantAccess(bytes16,bytes16,address)": FunctionFragment;
-    "includesAddress(address[],address)": FunctionFragment;
     "installModule(address,bytes)": FunctionFragment;
     "installRootModule(address,bytes)": FunctionFragment;
     "isStore()": FunctionFragment;
@@ -103,7 +102,6 @@ export interface IWorldInterface extends utils.Interface {
       | "getSchema"
       | "grantAccess(bytes16,address)"
       | "grantAccess(bytes16,bytes16,address)"
-      | "includesAddress"
       | "installModule"
       | "installRootModule"
       | "isStore"
@@ -197,10 +195,6 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BytesLike>,
       PromiseOrValue<string>
     ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "includesAddress",
-    values: [PromiseOrValue<string>[], PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "installModule",
@@ -349,10 +343,6 @@ export interface IWorldInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "grantAccess(bytes16,bytes16,address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "includesAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -571,12 +561,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    includesAddress(
-      arr: PromiseOrValue<string>[],
-      val: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     installModule(
       module: PromiseOrValue<string>,
       args: PromiseOrValue<BytesLike>,
@@ -766,12 +750,6 @@ export interface IWorld extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  includesAddress(
-    arr: PromiseOrValue<string>[],
-    val: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   installModule(
     module: PromiseOrValue<string>,
     args: PromiseOrValue<BytesLike>,
@@ -958,12 +936,6 @@ export interface IWorld extends BaseContract {
       grantee: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    includesAddress(
-      arr: PromiseOrValue<string>[],
-      val: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     installModule(
       module: PromiseOrValue<string>,
@@ -1187,12 +1159,6 @@ export interface IWorld extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    includesAddress(
-      arr: PromiseOrValue<string>[],
-      val: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     installModule(
       module: PromiseOrValue<string>,
       args: PromiseOrValue<BytesLike>,
@@ -1380,12 +1346,6 @@ export interface IWorld extends BaseContract {
       namespace: PromiseOrValue<BytesLike>,
       file: PromiseOrValue<BytesLike>,
       grantee: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    includesAddress(
-      arr: PromiseOrValue<string>[],
-      val: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
