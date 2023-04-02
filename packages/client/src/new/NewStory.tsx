@@ -9,6 +9,7 @@ import { Composer } from "./Composer";
 import { Story } from "./Story";
 import { ProposedEntry as ProposedEntryComponent } from "./ProposedEntry";
 import { useEffect, useState } from "react";
+import { CountVotesButton } from "./CountVotesButton";
 
 export const NewStory = () => {
   const {
@@ -51,8 +52,13 @@ export const NewStory = () => {
       });
     }
   }, [entries]);
-  
-  console.log('story ' ,story)
+
+  console.log("story ", story);
+
+  let parentKeyId = null;
+  if (story?.key) {
+    parentKeyId = world.entities[story?.key];
+  }
 
   return (
     <FlexColumn>
@@ -61,12 +67,22 @@ export const NewStory = () => {
         <Composer parentEntryKey={story?.key} />
         {/* Would be good to show some loading stuff here/handle empty case. */}
         {proposedEntries.length ? (
-          proposedEntries.map((key) => {
-            const proposal = getComponentValueStrict(ProposedEntry, key);
-            const entityId = world.entities[key]
-            // return ''
-            return <ProposedEntryComponent entry={proposal.sentence} entityId={entityId} votes={proposal.votes.length} key={entityId} />;
-          })
+          <>
+            {proposedEntries.map((key) => {
+              const proposal = getComponentValueStrict(ProposedEntry, key);
+              const entityId = world.entities[key];
+              // return ''
+              return (
+                <ProposedEntryComponent
+                  entry={proposal.sentence}
+                  entityId={entityId}
+                  votes={proposal.votes.length}
+                  key={entityId}
+                />
+              );
+            })}
+            <CountVotesButton proposalKey={parentKeyId} />
+          </>
         ) : (
           <></>
         )}

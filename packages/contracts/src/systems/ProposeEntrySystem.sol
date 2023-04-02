@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
+import { Entry } from "../tables/Entry.sol";
 import { ProposedEntry, ProposedEntryData } from "../tables/ProposedEntry.sol";
 import { IWorld } from "../world/IWorld.sol";
 import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
@@ -86,8 +87,29 @@ contract ProposeEntrySystem is System {
   }
 
   
-  function countVotes(bytes32 parentKey) public view returns (ProposedEntryData memory) {
-   bytes32[] memory proposedEntries = getKeysWithValue(ParentEntryTableId, ParentEntry.encode(parentKey) );
+  function countVotes(bytes32 parentKey) public returns (ProposedEntryData memory) {
+    address owner = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
+    bytes32[] memory proposedEntries = getKeysWithValue(ParentEntryTableId, ParentEntry.encode(parentKey));
+
+    uint maxVotes = 0;
+    ProposedEntryData memory winningProposal;
+
+
+    for (uint i=0; i < proposedEntries.length; i++) {
+      ProposedEntryData memory proposal = ProposedEntry.get(proposedEntries[i]);
+      uint votes = proposal.votes.length;
+
+      if (votes > maxVotes) {
+        maxVotes = votes;
+        winningProposal = proposal;
+      }
+    }
+
+    bytes32 entryKey = bytes32(keccak256(abi.encodePacked(block.number, owner, gasleft()))); // creating a random key for the record
+    Entry.set(entryKey, winningProposal.parentKey, owner, winningProposal.sentence);
+
+
+    // Entry.set(entryKey, address(0), proposer, sentence);
   }
 }
 

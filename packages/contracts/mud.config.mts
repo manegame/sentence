@@ -18,7 +18,7 @@ export default mudConfig({
     Entry: {
       fileSelector: "entry",
       schema: {
-        parent: "address",
+        parent: "bytes32",
         proposer: "address",
         sentence: "string",
       },

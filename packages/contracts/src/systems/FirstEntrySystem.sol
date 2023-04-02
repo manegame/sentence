@@ -36,7 +36,8 @@ contract FirstEntrySystem is System {
 
         // Uh can we use storyKey here instead?
         bytes32 entryKey = bytes32(keccak256(abi.encodePacked(block.number, storyKey, proposer, gasleft()))); // creating a random key for the record
-        Entry.set(entryKey, address(0), proposer, sentence);
+        bytes32 noParentKey = bytes32(keccak256(abi.encodePacked(address(0)))); // creating a random key for the record
+        Entry.set(entryKey, noParentKey, proposer, sentence);
 
         // Create ParentStory Index
         ParentStory.set(entryKey, storyKey);

@@ -21,7 +21,7 @@ uint256 constant _tableId = uint256(bytes32(abi.encodePacked(bytes16(""), bytes1
 uint256 constant EntryTableId = _tableId;
 
 struct EntryData {
-  address parent;
+  bytes32 parent;
   address proposer;
   string sentence;
 }
@@ -30,7 +30,7 @@ library Entry {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](3);
-    _schema[0] = SchemaType.ADDRESS;
+    _schema[0] = SchemaType.BYTES32;
     _schema[1] = SchemaType.ADDRESS;
     _schema[2] = SchemaType.STRING;
 
@@ -76,25 +76,25 @@ library Entry {
   }
 
   /** Get parent */
-  function getParent(bytes32 key) internal view returns (address parent) {
+  function getParent(bytes32 key) internal view returns (bytes32 parent) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _primaryKeys, 0);
-    return (address(Bytes.slice20(_blob, 0)));
+    return (Bytes.slice32(_blob, 0));
   }
 
   /** Get parent (using the specified store) */
-  function getParent(IStore _store, bytes32 key) internal view returns (address parent) {
+  function getParent(IStore _store, bytes32 key) internal view returns (bytes32 parent) {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
     bytes memory _blob = _store.getField(_tableId, _primaryKeys, 0);
-    return (address(Bytes.slice20(_blob, 0)));
+    return (Bytes.slice32(_blob, 0));
   }
 
   /** Set parent */
-  function setParent(bytes32 key, address parent) internal {
+  function setParent(bytes32 key, bytes32 parent) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -102,7 +102,7 @@ library Entry {
   }
 
   /** Set parent (using the specified store) */
-  function setParent(IStore _store, bytes32 key, address parent) internal {
+  function setParent(IStore _store, bytes32 key, bytes32 parent) internal {
     bytes32[] memory _primaryKeys = new bytes32[](1);
     _primaryKeys[0] = bytes32((key));
 
@@ -212,7 +212,7 @@ library Entry {
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, address parent, address proposer, string memory sentence) internal {
+  function set(bytes32 key, bytes32 parent, address proposer, string memory sentence) internal {
     bytes memory _data = encode(parent, proposer, sentence);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
@@ -222,7 +222,7 @@ library Entry {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, address parent, address proposer, string memory sentence) internal {
+  function set(IStore _store, bytes32 key, bytes32 parent, address proposer, string memory sentence) internal {
     bytes memory _data = encode(parent, proposer, sentence);
 
     bytes32[] memory _primaryKeys = new bytes32[](1);
@@ -243,15 +243,15 @@ library Entry {
 
   /** Decode the tightly packed blob using this table's schema */
   function decode(bytes memory _blob) internal view returns (EntryData memory _table) {
-    // 40 is the total byte length of static data
-    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 40));
+    // 52 is the total byte length of static data
+    PackedCounter _encodedLengths = PackedCounter.wrap(Bytes.slice32(_blob, 52));
 
-    _table.parent = (address(Bytes.slice20(_blob, 0)));
+    _table.parent = (Bytes.slice32(_blob, 0));
 
-    _table.proposer = (address(Bytes.slice20(_blob, 20)));
+    _table.proposer = (address(Bytes.slice20(_blob, 32)));
 
     uint256 _start;
-    uint256 _end = 72;
+    uint256 _end = 84;
 
     _start = _end;
     _end += _encodedLengths.atIndex(0);
@@ -259,7 +259,7 @@ library Entry {
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(address parent, address proposer, string memory sentence) internal view returns (bytes memory) {
+  function encode(bytes32 parent, address proposer, string memory sentence) internal view returns (bytes memory) {
     uint16[] memory _counters = new uint16[](1);
     _counters[0] = uint16(bytes(sentence).length);
     PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
