@@ -53,6 +53,7 @@ export interface IWorldInterface extends utils.Interface {
     "setMetadata(uint256,string,string[])": FunctionFragment;
     "setRecord(bytes16,bytes16,bytes32[],bytes)": FunctionFragment;
     "setRecord(uint256,bytes32[],bytes)": FunctionFragment;
+    "vote(bytes32)": FunctionFragment;
   };
 
   getFunction(
@@ -81,6 +82,7 @@ export interface IWorldInterface extends utils.Interface {
       | "setMetadata"
       | "setRecord(bytes16,bytes16,bytes32[],bytes)"
       | "setRecord(uint256,bytes32[],bytes)"
+      | "vote"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -239,6 +241,10 @@ export interface IWorldInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "vote",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
 
   decodeFunctionResult(functionFragment: "call", data: BytesLike): Result;
   decodeFunctionResult(
@@ -324,6 +330,7 @@ export interface IWorldInterface extends utils.Interface {
     functionFragment: "setRecord(uint256,bytes32[],bytes)",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "vote", data: BytesLike): Result;
 
   events: {
     "StoreDeleteRecord(uint256,bytes32[])": EventFragment;
@@ -557,6 +564,11 @@ export interface IWorld extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    vote(
+      proposedEntryKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   call(
@@ -714,6 +726,11 @@ export interface IWorld extends BaseContract {
     table: PromiseOrValue<BigNumberish>,
     key: PromiseOrValue<BytesLike>[],
     data: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  vote(
+    proposedEntryKey: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -875,6 +892,11 @@ export interface IWorld extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    vote(
+      proposedEntryKey: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
   };
 
   filters: {
@@ -1067,6 +1089,11 @@ export interface IWorld extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    vote(
+      proposedEntryKey: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1225,6 +1252,11 @@ export interface IWorld extends BaseContract {
       table: PromiseOrValue<BigNumberish>,
       key: PromiseOrValue<BytesLike>[],
       data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    vote(
+      proposedEntryKey: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

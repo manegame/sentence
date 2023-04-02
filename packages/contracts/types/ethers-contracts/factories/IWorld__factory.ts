@@ -635,6 +635,25 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "proposedEntryKey",
+        type: "bytes32",
+      },
+    ],
+    name: "vote",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ] as const;
 
 export class IWorld__factory {

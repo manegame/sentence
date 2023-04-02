@@ -29,22 +29,15 @@ export default mudConfig({
       schema: {
         id: "uint256",
         storyId: "uint256",
-        parentId: "uint256",
+        parentBlock: "uint256",
         proposedOnBlock: "uint256",
         timestamp: "uint256",
         proposer: "address",
         sentence: "string",
+        votes:"address[]"
       },
     },
-    Vote: {
-      fileSelector: "vote",
-      schema: {
-        id: "uint256",
-        proposedEntryId: "uint256",
-        voter: "address"
-      }
-    },
-    newEntryPeriod: {
+    NewEntryPeriod: {
       fileSelector: "newentryperiod",
       schema: {
         id: "uint256",
@@ -52,12 +45,12 @@ export default mudConfig({
         periodEndsBlock: "uint256"
       }
     },
-    newVotePeriod: {
+    NewVotePeriod: {
       fileSelector: "newvoteperiod",
       schema: {
         id: "uint256",
         parentBlock: "uint256",
-        periodEndsBlock: "uint256"
+        perioSdEndsBlock: "uint256"
       }
     }
   },
