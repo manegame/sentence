@@ -300,6 +300,25 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
+        name: "arrayLength",
+        type: "uint256",
+      },
+    ],
+    name: "getRandomIndex",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "table",
         type: "uint256",
       },

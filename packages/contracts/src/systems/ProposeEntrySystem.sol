@@ -5,7 +5,9 @@ import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { ProposedEntry, ProposedEntryData } from "../tables/ProposedEntry.sol";
 import { IWorld } from "../world/IWorld.sol";
-
+import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
+import { ParentEntryTableId, ParentEntry } from "../tables/ParentEntry.sol";
+ 
 bytes32 constant SingletonKey = bytes32(uint256(0x060D));
 
 contract ProposeEntrySystem is System {
@@ -15,6 +17,7 @@ contract ProposeEntrySystem is System {
 
   //eventually need to get parent key from frontend.
     bytes32 parentKey = key;
+    // check if valid proposal period
 
 
     address[] memory votes;
@@ -28,6 +31,11 @@ contract ProposeEntrySystem is System {
       entry,
       votes
     ); // creating our record!
+
+    ParentEntry.set(
+      key,
+      parentKey
+    );
 
     return entry;
   }
@@ -68,8 +76,9 @@ contract ProposeEntrySystem is System {
       return true;
   }
 
-
+  
   function countVotes(bytes32 parentKey) public view returns (ProposedEntryData memory) {
+   bytes32[] memory proposedEntries = getKeysWithValue(ParentEntryTableId, ParentEntry.encode(parentKey) );
   }
 }
 

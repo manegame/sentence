@@ -63,6 +63,7 @@ export interface IWorldInterface extends utils.Interface {
     "getCurrentlyVoting(bytes32)": FunctionFragment;
     "getField(uint256,bytes32[],uint8)": FunctionFragment;
     "getKeySchema(uint256)": FunctionFragment;
+    "getRandomIndex(uint256)": FunctionFragment;
     "getRecord(uint256,bytes32[],bytes32)": FunctionFragment;
     "getRecord(uint256,bytes32[])": FunctionFragment;
     "getSchema(uint256)": FunctionFragment;
@@ -98,6 +99,7 @@ export interface IWorldInterface extends utils.Interface {
       | "getCurrentlyVoting"
       | "getField"
       | "getKeySchema"
+      | "getRandomIndex"
       | "getRecord(uint256,bytes32[],bytes32)"
       | "getRecord(uint256,bytes32[])"
       | "getSchema"
@@ -168,6 +170,10 @@ export interface IWorldInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getKeySchema",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRandomIndex",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -332,6 +338,10 @@ export interface IWorldInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getField", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getKeySchema",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRandomIndex",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -540,6 +550,11 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { schema: string }>;
 
+    getRandomIndex(
+      arrayLength: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     "getRecord(uint256,bytes32[],bytes32)"(
       table: PromiseOrValue<BigNumberish>,
       key: PromiseOrValue<BytesLike>[],
@@ -733,6 +748,11 @@ export interface IWorld extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getRandomIndex(
+    arrayLength: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   "getRecord(uint256,bytes32[],bytes32)"(
     table: PromiseOrValue<BigNumberish>,
     key: PromiseOrValue<BytesLike>[],
@@ -923,6 +943,11 @@ export interface IWorld extends BaseContract {
       table: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getRandomIndex(
+      arrayLength: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     "getRecord(uint256,bytes32[],bytes32)"(
       table: PromiseOrValue<BigNumberish>,
@@ -1150,6 +1175,11 @@ export interface IWorld extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getRandomIndex(
+      arrayLength: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     "getRecord(uint256,bytes32[],bytes32)"(
       table: PromiseOrValue<BigNumberish>,
       key: PromiseOrValue<BytesLike>[],
@@ -1342,6 +1372,11 @@ export interface IWorld extends BaseContract {
     getKeySchema(
       table: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRandomIndex(
+      arrayLength: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     "getRecord(uint256,bytes32[],bytes32)"(
