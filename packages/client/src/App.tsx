@@ -46,8 +46,8 @@ export const App = () => {
         <NewStory />
         <Archives />
       </MainLayout>
-      <NoWorldModal />
       <WelcomeModal />
+      <NoWorldModal />
     </FullHeightDiv>
   );
 };
@@ -58,7 +58,8 @@ const FullHeightDiv = styled.div`
   color: black;
 `;
 
-const Nav = styled.div``;
+const Nav = styled.div`
+`;
 
 const MainLayout = styled.div`
   display: grid;
