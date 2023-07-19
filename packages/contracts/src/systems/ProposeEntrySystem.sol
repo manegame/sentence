@@ -51,25 +51,31 @@ contract ProposeEntrySystem is System {
 
       //check whether in a current valid voting period
 
-      // ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
-      // address[] memory votes = entry.votes;
-      // bytes32 parentKey = entry.parentKey;
+      ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
+      address[] memory votes = entry.votes;
+      bytes32 parentKey = entry.parentKey;
 
       address sender = _msgSender();
-      
 
-      // address worldAddress = _world();
-      // bool currentlyVoting = IWorld(worldAddress).getCurrentlyActive(parentKey);
 
-      // if(currentlyVoting == false) return false;
-      
-      //check if already voted
-      // ProposedEntry.getVotes()
+      address worldAddress = _world();
+      bool currentlyVoting = IWorld(worldAddress).getCurrentlyActive(parentKey);
+
+      console.log('currently voting:', currentlyVoting, 'sender:', sender);
+
       // for (uint i=0; i < votes.length; i++) {
-      //     if (sender == votes[i]) {
-      //         return false;
-      //     }
+      //   console.log('vote', votes[i]);
       // }
+
+      if(currentlyVoting == false) return false;
+      
+     // check if already voted
+      for (uint i=0; i < votes.length; i++) {
+          if (sender == votes[i]) {
+             console.log('vote', votes[i]);
+              return false;
+          }
+      }
 
       // address[] memory newvotes = new address[](votes.length + 1);
 

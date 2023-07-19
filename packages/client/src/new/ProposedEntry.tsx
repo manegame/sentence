@@ -23,8 +23,8 @@ export const ProposedEntry = ({
 
     const tx = await worldSend("vote", [entityId])
 
-    console.log("proposeEntry tx", tx)
-    console.log("proposeEntry result", await tx.wait())
+    console.log("vote tx", tx)
+    console.log("vote result", await tx.wait())
   }
   return (
     <ProposedEntryContainer>

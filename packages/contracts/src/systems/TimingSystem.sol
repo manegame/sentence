@@ -31,6 +31,7 @@ contract TimingSystem is System {
       return true;
     }
     else {
+      console.log('not currently active');
       return false;
     }
     //get the block number of the entity being voted/proposed on

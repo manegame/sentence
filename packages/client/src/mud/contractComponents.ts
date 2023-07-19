@@ -58,8 +58,8 @@ export function defineContractComponents(world: World) {
         world,
         {
           parentKey: RecsType.String,
-          proposedOnBlock: RecsType.BigInt,
-          timestamp: RecsType.BigInt,
+          proposedOnBlock: RecsType.Number,
+          timestamp: RecsType.Number,
           proposer: RecsType.String,
           sentence: RecsType.String,
           votes: RecsType.StringArray,
@@ -92,7 +92,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          periodEndsBlock: RecsType.BigInt,
+          periodEndsBlock: RecsType.Number,
         },
         {
           metadata: {

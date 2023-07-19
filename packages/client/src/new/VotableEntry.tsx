@@ -18,6 +18,7 @@ export const VotableEntry = ({
   } = useMUD();
 
   const vote = async () => {
+    console.log("voting!!!")
     // submit transactions here to vote.
     // handle edge cases here.
     const s = signer.get();
