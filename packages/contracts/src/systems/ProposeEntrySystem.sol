@@ -19,10 +19,11 @@ contract ProposeEntrySystem is System {
   //eventually need to get parent key from frontend.
     //  = key;
     // check if valid proposal period
-      address worldAddress = _world();
-      bool currentlyProposing = IWorld(worldAddress).getCurrentlyActive(parentKey);
+    address worldAddress = _world();
+    bool currentlyProposing = IWorld(worldAddress).getCurrentlyActive(parentKey);
+    console.log('currentlyProposing is', currentlyProposing);
 
-      if(currentlyProposing == false) return "did not work";
+    if(currentlyProposing == false) revert("outside proposal period");
 
     address[] memory votes;
 
@@ -61,7 +62,7 @@ contract ProposeEntrySystem is System {
       address worldAddress = _world();
       bool currentlyVoting = IWorld(worldAddress).getCurrentlyActive(parentKey);
 
-      console.log('currently voting:', currentlyVoting, 'sender:', sender);
+      // console.log('currently voting:', currentlyVoting, 'sender:', sender);
 
       // for (uint i=0; i < votes.length; i++) {
       //   console.log('vote', votes[i]);
@@ -98,6 +99,7 @@ contract ProposeEntrySystem is System {
     address owner = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
     bytes32[] memory proposedEntries = getKeysWithValue(ParentEntryTableId, ParentEntry.encode(parentKey));
 
+    console.log('counting votes');
     uint maxVotes = 0;
     ProposedEntryData memory winningProposal;
 
@@ -115,7 +117,7 @@ contract ProposeEntrySystem is System {
     bytes32 entryKey = bytes32(keccak256(abi.encodePacked(block.number, owner, gasleft()))); // creating a random key for the record
     Entry.set(entryKey, winningProposal.parentKey, owner, winningProposal.sentence);
 
-
+    console.log('winning proposal is', winningProposal.sentence);
     // Entry.set(entryKey, address(0), proposer, sentence);
   }
 }

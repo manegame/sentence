@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { Entry } from "../tables/Entry.sol";
 import { Story } from "../tables/Story.sol";
@@ -20,6 +21,7 @@ contract FirstEntrySystem is System {
         address proposer = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
         bytes32 storyKey = bytes32(keccak256(abi.encodePacked(block.number, proposer, gasleft()))); // creating a random key for the record
         
+        console.log("called create new story");
         // Create Story
         Story.set(storyKey, false);
       // storyBeginnings = new string[](29);
