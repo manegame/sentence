@@ -21,10 +21,12 @@ export const ProposedEntry = ({
     const s = signer.get()
     if (!s) throw new Error("No signer")
 
-    const tx = await worldSend("vote", [entityId])
-
-    console.log("vote tx", tx)
-    console.log("vote result", await tx.wait())
+    worldSend("vote", [entityId])
+      .then( (res) => console.log('success', res))
+      .catch( (e) => {
+        console.log('hit error', JSON.parse(e.error.body) ) 
+        alert(JSON.parse(e.error.body).error.message)
+        } );
   }
   return (
     <ProposedEntryContainer>

@@ -67,13 +67,14 @@ contract ProposeEntrySystem is System {
       //   console.log('vote', votes[i]);
       // }
 
-      if(currentlyVoting == false) return false;
+      if(currentlyVoting == false) revert("voting period for this block ended");
       
      // check if already voted
       for (uint i=0; i < votes.length; i++) {
           if (sender == votes[i]) {
-             console.log('vote', votes[i]);
-              return false;
+            // console.log('vote', votes[i]);
+            console.log("already voted");
+            revert("already voted");
           }
       }
 
