@@ -15,11 +15,15 @@ export const NoWorldModal = () => {
     const s = signer.get();
     if (!s) throw new Error("No signer");
 
-    const tx = await worldSend("createStory", []);
+    console.log('creating story')
+    worldSend("createStory", [])
+      .then( (res) => console.log('success: story created', res))
+      .catch( (e) => {
+        console.log('hit error', JSON.parse(e.error.body) ) 
+        alert(JSON.parse(e.error.body).error.message)
+        } );
     setIsOpen(false);
 
-    console.log("createStory tx", tx);
-    console.log("createStory result", await tx.wait());
   };
 
   return (

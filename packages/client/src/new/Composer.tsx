@@ -58,10 +58,15 @@ export const Composer = ({
     if (!s) throw new Error("No signer");
     const parentEntityId = world.entities[parentEntryKey];
 
-    const tx = await worldSend("proposeEntry", [parentEntityId, prompt]);
+    worldSend("proposeEntry", [parentEntityId, prompt])
+      .then( (res) => console.log('success', res))
+      .catch( (e) => {
+        console.log('hit error', JSON.parse(e.error.body) ) 
+        alert(JSON.parse(e.error.body).error.message)
+        } );
 
-    console.log("proposeEntry tx", tx);
-    console.log("proposeEntry result", await tx.wait());
+    // console.log("proposeEntry hhh tx", tx);
+    // console.log("proposeEntry result", await tx.wait());
   };
 
   return (

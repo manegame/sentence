@@ -16,10 +16,13 @@ export const CountVotesButton = ({
     if (!s) throw new Error("No signer");
 
     if (proposalKey) {
-      const tx = await worldSend("countVotes", [proposalKey]);
+      worldSend("countVotes", [proposalKey])
+        .then( (res) => console.log('success', res))
+        .catch( (e) => {
+          console.log('hit error', JSON.parse(e.error.body) ) 
+          alert(JSON.parse(e.error.body).error.message)
+          } );
 
-      console.log("countVotes tx", tx);
-      console.log("countVotes result", await tx.wait());
     }
   };
 
