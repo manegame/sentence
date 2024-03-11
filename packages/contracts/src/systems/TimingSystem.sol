@@ -3,21 +3,23 @@ pragma solidity >=0.8.0;
 
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { ProposalPeriod } from "../tables/ProposalPeriod.sol";
+import { ProposalPeriod } from "../codegen/tables/ProposalPeriod.sol";
 
 bytes32 constant SingletonKey = bytes32(uint256(0x060D));
-uint256 constant proposalPeriod = 100;
+uint256 constant proposalPeriod = 600;
 
 contract TimingSystem is System {
   
   function setProposalTime(bytes32 parentKey) public returns (uint256) {
     uint256 periodEndsBlock = block.number + proposalPeriod;
 
+    // console.log(parentKey);
+
     ProposalPeriod.set(
       parentKey,
       periodEndsBlock
     );
-    console.log("setting proposal period", block.number, periodEndsBlock, proposalPeriod);
+
     return periodEndsBlock;
   }
 
@@ -25,13 +27,13 @@ contract TimingSystem is System {
     uint256 currentBlock = block.number;
     uint256 proposalPeriodEnds = ProposalPeriod.get(parentKey);
 
-    console.log("checking currently active", proposalPeriodEnds, currentBlock);
+    // console.log("checking currently active", proposalPeriodEnds, currentBlock);
     if (currentBlock < proposalPeriodEnds){
-      console.log("currently active");
+      // console.log("currently active");
       return true;
     }
     else {
-      console.log('not currently active');
+      // console.log('not currently active');
       return false;
     }
     //get the block number of the entity being voted/proposed on

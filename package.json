@@ -1,21 +1,30 @@
 {
-  "private": true,
-  "name": "v-2sandbox",
-  "workspaces": [
-    "packages/contracts",
-    "packages/client"
-  ],
+  "name": "template-mud-svelte",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moving-castles/template-mud-svelte.git"
+  },
   "scripts": {
-    "initialize": "npx yarn workspaces run initialize",
-    "dev": "run-pty % npx yarn dev:node % npx yarn dev:client % npx yarn dev:contracts",
-    "dev:client": "npx yarn workspace client run dev",
-    "dev:node": "npx yarn workspace contracts run devnode",
-    "dev:contracts": "npx yarn workspace contracts run dev",
-    "link:mud": "for i in node_modules/@latticexyz/*; do npx yarn link @latticexyz/$(basename $i); done",
-    "unlink:mud": "for i in node_modules/@latticexyz/*; do npx yarn unlink @latticexyz/$(basename $i); done && npx yarn install --force"
+    "build": "pnpm recursive run build",
+    "clean": "pnpm recursive run clean",
+    "dev": "mprocs 'pnpm run dev:contracts' 'pnpm run dev:client'",
+    "dev:client": "pnpm --filter 'client' run dev",
+    "dev:contracts": "pnpm --filter 'contracts' run dev",
+    "playtest": "pnpm --filter 'contracts' run deploy:testnet && pnpm run build && netlify deploy --prod",
+    "test": "pnpm recursive run test"
   },
   "devDependencies": {
-    "run-pty": "^4.0.3"
+    "@latticexyz/cli": "2.0.0-main-8f41f81f",
+    "@typescript-eslint/eslint-plugin": "5.60.0",
+    "@typescript-eslint/parser": "5.60.0",
+    "eslint": "8.54.0",
+    "rimraf": "^5.0.5",
+    "mprocs": "^0.6.4",
+    "typescript": "^5.3.2"
   },
-  "dependencies": {}
+  "engines": {
+    "node": "18.x",
+    "pnpm": "8.x"
+  }
 }

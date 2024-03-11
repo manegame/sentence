@@ -3,12 +3,13 @@ pragma solidity >=0.8.0;
 
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { Entry } from "../tables/Entry.sol";
-import { Story } from "../tables/Story.sol";
-import { ParentStoryTableId, ParentStory } from "../tables/ParentStory.sol";
-import { IWorld } from "../world/IWorld.sol";
+import { Entry } from "../codegen/tables/Entry.sol";
+import { Story } from "../codegen/tables/Story.sol";
+import { ParentStoryTableId, ParentStory } from "../codegen/tables/ParentStory.sol";
+import { IWorld } from "../codegen/world/IWorld.sol";
 
 bytes32 constant SingletonKey = bytes32(uint256(0x060D));
+uint256 constant proposalPeriod = 600;
 
 contract FirstEntrySystem is System {
     function getRandomIndex(uint256 arrayLength) public view returns (uint256) {
@@ -20,11 +21,11 @@ contract FirstEntrySystem is System {
     function createStory() public {
         address proposer = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
         bytes32 storyKey = bytes32(keccak256(abi.encodePacked(block.number, proposer, gasleft()))); // creating a random key for the record
+        uint256 periodEndsBlock = block.number + proposalPeriod;
         
-        console.log("called create new story");
         // Create Story
-        Story.set(storyKey, false);
-      // storyBeginnings = new string[](29);
+        Story.set(storyKey, false, periodEndsBlock);
+        // storyBeginnings = new string[](29);
         
         // Create first Entry of Story
         // TODO: Add more prompts
@@ -72,7 +73,7 @@ contract FirstEntrySystem is System {
 
         // Create First Proposal Window
         address worldAddress = _world();
-        IWorld(worldAddress).setProposalTime(entryKey);
+        IWorld(worldAddress).mud_TimingSystem_setProposalTime(entryKey);
     }
 }
 

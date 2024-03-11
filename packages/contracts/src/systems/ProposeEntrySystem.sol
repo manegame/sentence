@@ -3,11 +3,12 @@ pragma solidity >=0.8.0;
 
 import { console } from "forge-std/console.sol";
 import { System } from "@latticexyz/world/src/System.sol";
-import { Entry } from "../tables/Entry.sol";
-import { ProposedEntry, ProposedEntryData } from "../tables/ProposedEntry.sol";
-import { IWorld } from "../world/IWorld.sol";
-import { getKeysWithValue } from "@latticexyz/world/src/modules/keyswithvalue/getKeysWithValue.sol";
-import { ParentEntryTableId, ParentEntry } from "../tables/ParentEntry.sol";
+import { PackedCounter } from "@latticexyz/store/src/PackedCounter.sol";
+import { Entry } from "../codegen/tables/Entry.sol";
+import { ProposedEntry, ProposedEntryData } from "../codegen/tables/ProposedEntry.sol";
+import { IWorld } from "../codegen/world/IWorld.sol";
+import { getKeysWithValue } from "@latticexyz/world-modules/src/modules/keyswithvalue/getKeysWithValue.sol";
+import { ParentEntryTableId, ParentEntry } from "../codegen/tables/ParentEntry.sol";
  
 bytes32 constant SingletonKey = bytes32(uint256(0x060D));
 
@@ -16,21 +17,21 @@ contract ProposeEntrySystem is System {
     address owner = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
     bytes32 key = bytes32(keccak256(abi.encodePacked(block.number, owner, gasleft()))); // creating a random key for the record
 
-  //eventually need to get parent key from frontend.
+    //eventually need to get parent key from frontend.
     //  = key;
     // check if valid proposal period
     address worldAddress = _world();
-    bool currentlyProposing = IWorld(worldAddress).getCurrentlyActive(parentKey);
-    console.log('currentlyProposing is', currentlyProposing);
+    bool currentlyProposing = IWorld(worldAddress).mud_TimingSystem_getCurrentlyActive(parentKey);
+    // console.log('currentlyProposing is', currentlyProposing);
 
-    if(currentlyProposing == false) revert("outside proposal period");
+    // if(currentlyProposing == false) revert("outside proposal period");
 
     address[] memory votes;
 
     ProposedEntry.set(
       key,
-      parentKey,
       block.number,
+      parentKey,
       block.timestamp,
       owner,
       entry,
@@ -52,42 +53,22 @@ contract ProposeEntrySystem is System {
 
       //check whether in a current valid voting period
 
-      ProposedEntryData memory entry = ProposedEntry.get(proposedEntryKey);
-      address[] memory votes = entry.votes;
-      bytes32 parentKey = entry.parentKey;
+      address[] memory votes = ProposedEntry.getVotes(proposedEntryKey);
+      bytes32 parentKey = ProposedEntry.getParentKey(proposedEntryKey);
 
       address sender = _msgSender();
 
-
       address worldAddress = _world();
-      bool currentlyVoting = IWorld(worldAddress).getCurrentlyActive(parentKey);
+      bool currentlyVoting = IWorld(worldAddress).mud_TimingSystem_getCurrentlyActive(parentKey);
 
-      // console.log('currently voting:', currentlyVoting, 'sender:', sender);
-
-      // for (uint i=0; i < votes.length; i++) {
-      //   console.log('vote', votes[i]);
-      // }
-
-      if(currentlyVoting == false) revert("voting period for this block ended");
+      // if(currentlyVoting == false) revert("voting period for this block ended");
       
      // check if already voted
       for (uint i=0; i < votes.length; i++) {
           if (sender == votes[i]) {
-            // console.log('vote', votes[i]);
-            console.log("already voted");
             revert("already voted");
           }
       }
-
-      // address[] memory newvotes = new address[](votes.length + 1);
-
-      // for (uint i=0; i < votes.length; i++) {
-      //     newvotes[i] = votes[i];
-      // }
-
-      // newvotes[votes.length + 1] = sender;
-
-      // ProposedEntry.pushVotes(proposedEntryKey, sender);
 
       // We good
       ProposedEntry.pushVotes(proposedEntryKey, sender);
@@ -97,9 +78,11 @@ contract ProposeEntrySystem is System {
   
   function countVotes(bytes32 parentKey) public returns (ProposedEntryData memory) {
     address owner = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
-    bytes32[] memory proposedEntries = getKeysWithValue(ParentEntryTableId, ParentEntry.encode(parentKey));
 
-    console.log('counting votes');
+    (bytes memory staticData, PackedCounter encodedLengths, bytes memory dynamicData) = ParentEntry.encode(parentKey);
+    bytes32[] memory proposedEntries = getKeysWithValue(ParentEntryTableId, staticData, encodedLengths, dynamicData);
+
+    // console.log('counting votes');
     uint maxVotes = 0;
     ProposedEntryData memory winningProposal;
 
@@ -117,19 +100,7 @@ contract ProposeEntrySystem is System {
     bytes32 entryKey = bytes32(keccak256(abi.encodePacked(block.number, owner, gasleft()))); // creating a random key for the record
     Entry.set(entryKey, winningProposal.parentKey, owner, winningProposal.sentence);
 
-    console.log('winning proposal is', winningProposal.sentence);
+    // console.log('winning proposal is', winningProposal.sentence);
     // Entry.set(entryKey, address(0), proposer, sentence);
   }
 }
-
-// struct ProposedEntryData {
-    // bytes32 key,
-    // uint256 id,
-    // uint256 storyId,
-    // uint256 parentId,
-    // uint256 proposedOnBlock,
-    // uint256 timestamp,
-    // address proposer,
-    // string memory sentence
-// }
-
