@@ -11,14 +11,40 @@
   const [transactionState, vote] = makeAction(WorldFunctions.Vote)
 </script>
 
-{#if $transactionState === TransactionState.READY}
+{#if !entry.votes.includes($localPlayerAddress)}
   <button
+    class="cast"
     disabled={entry.votes.includes($localPlayerAddress)}
-    type="button"
     on:click={() => vote([address])}
   >
-    {entry.votes.length}
+    <small class="votes">
+      {#if $transactionState === TransactionState.READY}
+        Votes: {entry.votes.length} +
+      {:else}
+        Casting vote
+      {/if}
+    </small>
   </button>
 {:else}
-  <small> Casting vote </small>
+  {entry.votes.length}
 {/if}
+
+<style>
+  button {
+    background: unset;
+  }
+
+  .votes {
+    display: inline-block;
+    padding-left: 0.5rem;
+  }
+  .cast {
+    color: var(--grey-2);
+    font-size: 1rem;
+    line-height: 1rem;
+    padding: 0;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+  }
+</style>

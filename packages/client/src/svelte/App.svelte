@@ -11,9 +11,12 @@
   import { UIState, UI } from "./modules/ui/stores"
   import { localPlayer } from "./modules/state"
 
+  import url from "./url"
+
   import Loading from "./components/Loading.svelte"
   import Spawn from "./components/Spawn.svelte"
   import Game from "./components/Game.svelte"
+  import Archive from "./components/Archive.svelte"
 
   import Toasts from "./modules/ui/toast/Toasts.svelte"
 
@@ -63,6 +66,8 @@
 
 {#if $UIState === UI.READY}
   <Game />
+
+  <Archive />
 {/if}
 
 <Toasts />

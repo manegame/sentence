@@ -3,7 +3,8 @@
   import type { ProposedEntry as ProposedEntryType } from "../modules/state/types"
 
   import { ethers } from "ethers"
-  import { players, entities } from "../modules/state"
+  import { blockNumber } from "../modules/network"
+  import { players, votingStartsIn, votingEnds } from "../modules/state"
 
   import TextInput from "./TextInput.svelte"
   import EntryVoteControls from "./EntryVoteControls.svelte"
@@ -30,20 +31,42 @@
 </script>
 
 <div class="entry">
-  {#if proposer?.name}
-    <small class="byline"
-      >Proposed at block nr. {entry?.proposedOnBlock} by {proposer?.name}</small
-    >
-  {/if}
-  <TextInput value={entry?.sentence} />
-
-  <!-- Vote controls -->
-  <EntryVoteControls {address} {entry} />
+  <TextInput value={entry?.sentence}>
+    {#if proposer?.name}
+      <small class="byline">↳{proposer?.name} at {entry?.proposedOnBlock}</small
+      >
+    {/if}
+    <small class="votes">
+      {#if $votingStartsIn > 0}{:else if $votingEnds > $blockNumber}
+        <!-- Vote controls -->
+        <EntryVoteControls {address} {entry} />
+      {:else}
+        <span class="inner">
+          Votes: {entry?.votes.length}
+        </span>
+      {/if}
+    </small>
+  </TextInput>
 </div>
 
 <style>
   .entry {
     display: flex;
     flex-flow: column nowrap;
+  }
+
+  .votes {
+    background: var(--grey-1);
+    padding: 0;
+    color: var(--grey-2);
+  }
+
+  .inner {
+    display: inline-block;
+    padding-left: 0.5rem;
+  }
+
+  small {
+    color: var(--grey-2);
   }
 </style>

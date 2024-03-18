@@ -45,10 +45,11 @@ textarea {
   padding: 0;
 }
 
+.count,
 .propose {
   color: var(--grey-2);
-  font-size: 5rem;
-  height: 5rem;
+  font-size: 5rem !important;
+  height: 5rem !important;
   background: none;
   border: none;
   line-height: 10px;
@@ -61,8 +62,11 @@ textarea {
 .propose::after {
   content: "+";
 }
+.count::after {
+  content: "⁕";
+}
 
 .byline {
   display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0;
 }

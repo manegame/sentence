@@ -1,12 +1,13 @@
 <script lang="ts">
-  export let value = "..."
+  export let placeholder = "..."
+  export let value = placeholder
   export let contenteditable = false
 
   const onFocus = () => {
-    if (value === "...") value = ""
+    if (value === placeholder) value = ""
   }
   const onBlur = () => {
-    if (value === "") value = "..."
+    if (value === "") value = placeholder
   }
 </script>
 
@@ -23,18 +24,23 @@
   </div>
 {:else}
   <div class="text-input" class:proposed={!contenteditable}>
-    {value}
+    <div>{value}</div>
+    <slot />
   </div>
 {/if}
 
 <style>
   .text-input {
-    padding: 2rem 1rem;
+    padding: 1.5rem;
     width: var(--proposal-width);
-    border: 2px solid var(--grey-2);
+  }
+
+  .text-input[contenteditable] {
+    border: 4px solid var(--grey-1);
   }
 
   .proposed {
-    background: var(--grey-2);
+    background: var(--grey-1);
+    padding: 1.5rem 1.5rem;
   }
 </style>

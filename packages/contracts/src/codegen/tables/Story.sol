@@ -26,11 +26,11 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant StoryTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0021020001200000000000000000000000000000000000000000000000000000
+  0x0040020020200000000000000000000000000000000000000000000000000000
 );
 
 struct StoryData {
-  bool archived;
+  uint256 startedBlock;
   uint256 periodEndsBlock;
 }
 
@@ -60,7 +60,7 @@ library Story {
    */
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _valueSchema = new SchemaType[](2);
-    _valueSchema[0] = SchemaType.BOOL;
+    _valueSchema[0] = SchemaType.UINT256;
     _valueSchema[1] = SchemaType.UINT256;
 
     return SchemaLib.encode(_valueSchema);
@@ -81,7 +81,7 @@ library Story {
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
     fieldNames = new string[](2);
-    fieldNames[0] = "archived";
+    fieldNames[0] = "startedBlock";
     fieldNames[1] = "periodEndsBlock";
   }
 
@@ -100,45 +100,45 @@ library Story {
   }
 
   /**
-   * @notice Get archived.
+   * @notice Get startedBlock.
    */
-  function getArchived(bytes32 key) internal view returns (bool archived) {
+  function getStartedBlock(bytes32 key) internal view returns (uint256 startedBlock) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (_toBool(uint8(bytes1(_blob))));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
-   * @notice Get archived.
+   * @notice Get startedBlock.
    */
-  function _getArchived(bytes32 key) internal view returns (bool archived) {
+  function _getStartedBlock(bytes32 key) internal view returns (uint256 startedBlock) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (_toBool(uint8(bytes1(_blob))));
+    return (uint256(bytes32(_blob)));
   }
 
   /**
-   * @notice Set archived.
+   * @notice Set startedBlock.
    */
-  function setArchived(bytes32 key, bool archived) internal {
+  function setStartedBlock(bytes32 key, uint256 startedBlock) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((archived)), _fieldLayout);
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((startedBlock)), _fieldLayout);
   }
 
   /**
-   * @notice Set archived.
+   * @notice Set startedBlock.
    */
-  function _setArchived(bytes32 key, bool archived) internal {
+  function _setStartedBlock(bytes32 key, uint256 startedBlock) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((archived)), _fieldLayout);
+    StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((startedBlock)), _fieldLayout);
   }
 
   /**
@@ -216,8 +216,8 @@ library Story {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, bool archived, uint256 periodEndsBlock) internal {
-    bytes memory _staticData = encodeStatic(archived, periodEndsBlock);
+  function set(bytes32 key, uint256 startedBlock, uint256 periodEndsBlock) internal {
+    bytes memory _staticData = encodeStatic(startedBlock, periodEndsBlock);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -231,8 +231,8 @@ library Story {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, bool archived, uint256 periodEndsBlock) internal {
-    bytes memory _staticData = encodeStatic(archived, periodEndsBlock);
+  function _set(bytes32 key, uint256 startedBlock, uint256 periodEndsBlock) internal {
+    bytes memory _staticData = encodeStatic(startedBlock, periodEndsBlock);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -247,7 +247,7 @@ library Story {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, StoryData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.archived, _table.periodEndsBlock);
+    bytes memory _staticData = encodeStatic(_table.startedBlock, _table.periodEndsBlock);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -262,7 +262,7 @@ library Story {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, StoryData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.archived, _table.periodEndsBlock);
+    bytes memory _staticData = encodeStatic(_table.startedBlock, _table.periodEndsBlock);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -276,10 +276,10 @@ library Story {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (bool archived, uint256 periodEndsBlock) {
-    archived = (_toBool(uint8(Bytes.slice1(_blob, 0))));
+  function decodeStatic(bytes memory _blob) internal pure returns (uint256 startedBlock, uint256 periodEndsBlock) {
+    startedBlock = (uint256(Bytes.slice32(_blob, 0)));
 
-    periodEndsBlock = (uint256(Bytes.slice32(_blob, 1)));
+    periodEndsBlock = (uint256(Bytes.slice32(_blob, 32)));
   }
 
   /**
@@ -293,7 +293,7 @@ library Story {
     PackedCounter,
     bytes memory
   ) internal pure returns (StoryData memory _table) {
-    (_table.archived, _table.periodEndsBlock) = decodeStatic(_staticData);
+    (_table.startedBlock, _table.periodEndsBlock) = decodeStatic(_staticData);
   }
 
   /**
@@ -320,8 +320,8 @@ library Story {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(bool archived, uint256 periodEndsBlock) internal pure returns (bytes memory) {
-    return abi.encodePacked(archived, periodEndsBlock);
+  function encodeStatic(uint256 startedBlock, uint256 periodEndsBlock) internal pure returns (bytes memory) {
+    return abi.encodePacked(startedBlock, periodEndsBlock);
   }
 
   /**
@@ -331,10 +331,10 @@ library Story {
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
   function encode(
-    bool archived,
+    uint256 startedBlock,
     uint256 periodEndsBlock
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(archived, periodEndsBlock);
+    bytes memory _staticData = encodeStatic(startedBlock, periodEndsBlock);
 
     PackedCounter _encodedLengths;
     bytes memory _dynamicData;
@@ -350,17 +350,5 @@ library Story {
     _keyTuple[0] = key;
 
     return _keyTuple;
-  }
-}
-
-/**
- * @notice Cast a value to a bool.
- * @dev Boolean values are encoded as uint8 (1 = true, 0 = false), but Solidity doesn't allow casting between uint8 and bool.
- * @param value The uint8 value to convert.
- * @return result The boolean value.
- */
-function _toBool(uint8 value) pure returns (bool result) {
-  assembly {
-    result := value
   }
 }

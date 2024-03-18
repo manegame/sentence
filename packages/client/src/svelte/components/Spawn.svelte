@@ -3,6 +3,7 @@
   import { toastMessage } from "../modules/ui/toast"
   import { spawn } from "../modules/action"
   import { playSound } from "../modules/sound"
+  import TextInput from "../components/TextInput.svelte"
   import {
     waitForCompletion,
     TransactionState,
@@ -10,7 +11,7 @@
 
   const dispatch = createEventDispatcher()
 
-  let name = ""
+  let name = "name"
   let transactionState = TransactionState.READY
 
   const onSubmit = async () => {
@@ -36,17 +37,9 @@
 
 <div class="spawn">
   {#if transactionState === TransactionState.READY}
-    <form on:submit|preventDefault={onSubmit}>
-      <!-- svelte-ignore a11y-autofocus -->
-      <input
-        type="text"
-        autofocus
-        required
-        placeholder="Name"
-        bind:value={name}
-      />
-      <button type="submit">Start</button>
-    </form>
+    
+  <TextInput placeholder="name" contenteditable bind:value={name} />
+  <button on:click={onSubmit} class="propose"></button>
   {:else}
     <div>
       {TransactionState[transactionState]}

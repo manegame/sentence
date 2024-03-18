@@ -2,11 +2,21 @@
  *  Central store for all entities in the game.
  *
  */
-import { network } from "../network"
+import { network, blockNumber } from "../network"
 import { writable, derived } from "svelte/store"
 import { Entities, Players, Stories, ProposedEntries, GameConfig } from "./types"
 
 const GAME_CONFIG_ID = "0x"
+const VOTING_PERIOD = 20
+
+/**
+ * Just an util to remove leading zeros for easy and consistent access
+ * @param address 
+ * @returns 
+ */
+export function removeLeadingZeros(address) {
+  return "0x" + address.slice(2).replace(/^0+/, "")
+}
 
 // * * * * * * * * * * * * * * * * *
 // DEFAULT ENTITY STORE
@@ -30,7 +40,7 @@ export const players = derived(entities, $entities => {
   return Object.fromEntries(
     Object.entries($entities).filter(
       ([_, entity]) => entity.name
-    )
+    ).map(([address, _]) => [removeLeadingZeros(address), _])
   ) as Players
 })
 
@@ -46,6 +56,63 @@ export const stories = derived(entities, $entities => {
     )
   ) as Stories
 })
+
+
+/**
+ * Parent stories
+ */
+export const parentStories = derived(entities, $entities => {
+  return Object.fromEntries(
+    Object.entries($entities).filter(
+      ([, entity]) => {
+        return entity.parentKey
+      }
+    )
+  ) as Stories
+})
+
+/**
+ * Latest story
+ */
+export const latestStory = derived(stories, $stories => {
+  if (Object.keys($stories).length === 0) {
+    return false
+  }
+
+  return Object.entries($stories).reduce((prev, current) => Number(prev[1].story.periodEndsBlock) > Number(current[1].story.periodEndsBlock) ? prev : current)
+}) 
+
+export const archive = derived([stories, latestStory], ([$stories, $latestStory]) => {
+  if ($latestStory) {
+    return Object.fromEntries(Object.entries($stories).filter(([_, story]) => story.story.periodEndsBlock !== $latestStory[1].story.periodEndsBlock))
+  }
+
+  return $stories
+})
+
+/**
+ * When does the voting end?
+ */
+export const votingEnds = derived(latestStory, $latestStory => {
+  if ($latestStory) {
+    return Number($latestStory[1].story.periodEndsBlock) + VOTING_PERIOD
+  }
+
+  return -1
+})
+
+/**
+ * Countdown until voting starts
+ */
+export const votingStartsIn = derived([latestStory, blockNumber], ([$latestStory, $blockNumber]) => {
+  if ($latestStory) {
+    return Number($latestStory[1].story.periodEndsBlock) - $blockNumber
+  }
+
+  return -1
+})
+
+
 
 /**
  * Succeeded entries
@@ -73,19 +140,6 @@ export const proposedEntries = derived(entities, $entities => {
   ) as ProposedEntries
 })
 
-/**
- * Current voting period
-*/
-export const votingPeriods = derived(entities, $entities => {
-  return Object.fromEntries(
-    Object.entries($entities).filter(
-      ([, entity]) => {
-        return entity?.periodEndsBlock
-      }
-    )
-  ) as ProposedEntries
-})
-
 
 /**
  * Players ordered by counter value in descending order
@@ -101,7 +155,7 @@ export const leaderBoard = derived(players, $players => {
 
 export const localPlayerAddress = derived(
   network,
-  $network => $network.walletClient?.account.address || "0x0"
+  $network => $network.walletClient?.account.address?.toLowerCase() || "0x0"
 )
 
 /**
@@ -114,7 +168,7 @@ export const localPlayerEntityId = derived(
 
 export const localPlayer = derived(
   [players, localPlayerEntityId],
-  ([$players, $localPlayerEntityId]) => $players[$localPlayerEntityId]
+  ([$players, $localPlayerEntityId]) => $players[removeLeadingZeros($localPlayerEntityId)]
 )
 
 // * * * * * * * * * * * * * * * * *
@@ -125,10 +179,3 @@ export const gameConfig = derived(
   entities,
   $entities => $entities[GAME_CONFIG_ID].gameconfig as GameConfig
 )
-
-export const countdown = derived(stories, ($stories) => {
-  console.log("$stories")
-  console.log($stories)
-
-  return -1
-})

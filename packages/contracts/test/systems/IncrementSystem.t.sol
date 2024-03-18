@@ -24,9 +24,6 @@ contract SpawnSystemTest is MudTest {
 
     vm.startPrank(alice);
     bytes32 playerEntity = world.mud_SpawnSystem_spawn("alice");
-    world.mud_IncrementSystem_increment();
     vm.stopPrank();
-
-    assertEq(Counter.get(playerEntity), gameConfig.increment);
   }
 }

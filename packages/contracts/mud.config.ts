@@ -11,7 +11,6 @@ export default mudConfig({
   namespace: "mud",
   tables: {
     Name: "string",
-    Counter: "uint32",
     GameConfig: {
         keySchema: {},
         valueSchema: {
@@ -22,7 +21,7 @@ export default mudConfig({
     Story: {
       fileSelector: "story",
       valueSchema: {
-        archived: "bool",
+        startedBlock: "uint256",
         periodEndsBlock: "uint256"
       },
     },
@@ -31,6 +30,7 @@ export default mudConfig({
       valueSchema: {
         parent: "bytes32",
         proposer: "address",
+        proposedOnBlock: "uint256",
         sentence: "string",
       },
     },
@@ -56,13 +56,7 @@ export default mudConfig({
       valueSchema: {
         parentKey: "bytes32",
       },
-    },
-    ProposalPeriod: {
-      fileSelector: "proposalperiod",
-      valueSchema: {
-        periodEndsBlock: "uint256",
-      },
-    },
+    }
   },
   modules: [
     {

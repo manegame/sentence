@@ -13,27 +13,36 @@
 
   const makeProposal = async () => {
     try {
-      propose([parentKey, value])
+      await propose([parentKey, value])
+      value = "..."
     } catch (error) {
       console.error(error)
+    } finally {
     }
   }
 </script>
 
-<div class="wrapper">
-  <div class="new-proposal">
-    <div class="">
-      <small class="byline"> Propose the next sentence </small>
-      <TextInput contenteditable bind:value />
-    </div>
+<div class="outer">
+  <div class="wrapper">
+    <div class="new-proposal">
+      <div class="">
+        <TextInput contenteditable bind:value />
+      </div>
 
-    {#if $transactionState === TransactionState.READY}
-      <button on:click={makeProposal} class="propose" />
-    {/if}
+      {#if $transactionState === TransactionState.READY}
+        <button on:click={makeProposal} class="propose" />
+      {:else}
+        <button on:click={makeProposal} class="propose" />
+      {/if}
+    </div>
   </div>
 </div>
 
 <style>
+  .outer {
+    display: flex;
+    flex-flow: column nowrap;
+  }
   .wrapper {
     display: flex;
     gap: 1rem;
@@ -41,7 +50,6 @@
   }
   .new-proposal {
     display: flex;
-    /* flex-flow: column nowrap; */
     gap: 1rem;
   }
 

@@ -26,12 +26,13 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant EntryTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0034020120140000000000000000000000000000000000000000000000000000
+  0x0054030120142000000000000000000000000000000000000000000000000000
 );
 
 struct EntryData {
   bytes32 parent;
   address proposer;
+  uint256 proposedOnBlock;
   string sentence;
 }
 
@@ -60,10 +61,11 @@ library Entry {
    * @return _valueSchema The value schema for the table.
    */
   function getValueSchema() internal pure returns (Schema) {
-    SchemaType[] memory _valueSchema = new SchemaType[](3);
+    SchemaType[] memory _valueSchema = new SchemaType[](4);
     _valueSchema[0] = SchemaType.BYTES32;
     _valueSchema[1] = SchemaType.ADDRESS;
-    _valueSchema[2] = SchemaType.STRING;
+    _valueSchema[2] = SchemaType.UINT256;
+    _valueSchema[3] = SchemaType.STRING;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -82,10 +84,11 @@ library Entry {
    * @return fieldNames An array of strings with the names of value fields.
    */
   function getFieldNames() internal pure returns (string[] memory fieldNames) {
-    fieldNames = new string[](3);
+    fieldNames = new string[](4);
     fieldNames[0] = "parent";
     fieldNames[1] = "proposer";
-    fieldNames[2] = "sentence";
+    fieldNames[2] = "proposedOnBlock";
+    fieldNames[3] = "sentence";
   }
 
   /**
@@ -184,6 +187,48 @@ library Entry {
     _keyTuple[0] = key;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 1, abi.encodePacked((proposer)), _fieldLayout);
+  }
+
+  /**
+   * @notice Get proposedOnBlock.
+   */
+  function getProposedOnBlock(bytes32 key) internal view returns (uint256 proposedOnBlock) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (uint256(bytes32(_blob)));
+  }
+
+  /**
+   * @notice Get proposedOnBlock.
+   */
+  function _getProposedOnBlock(bytes32 key) internal view returns (uint256 proposedOnBlock) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 2, _fieldLayout);
+    return (uint256(bytes32(_blob)));
+  }
+
+  /**
+   * @notice Set proposedOnBlock.
+   */
+  function setProposedOnBlock(bytes32 key, uint256 proposedOnBlock) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((proposedOnBlock)), _fieldLayout);
+  }
+
+  /**
+   * @notice Set proposedOnBlock.
+   */
+  function _setProposedOnBlock(bytes32 key, uint256 proposedOnBlock) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreCore.setStaticField(_tableId, _keyTuple, 2, abi.encodePacked((proposedOnBlock)), _fieldLayout);
   }
 
   /**
@@ -381,8 +426,14 @@ library Entry {
   /**
    * @notice Set the full data using individual values.
    */
-  function set(bytes32 key, bytes32 parent, address proposer, string memory sentence) internal {
-    bytes memory _staticData = encodeStatic(parent, proposer);
+  function set(
+    bytes32 key,
+    bytes32 parent,
+    address proposer,
+    uint256 proposedOnBlock,
+    string memory sentence
+  ) internal {
+    bytes memory _staticData = encodeStatic(parent, proposer, proposedOnBlock);
 
     PackedCounter _encodedLengths = encodeLengths(sentence);
     bytes memory _dynamicData = encodeDynamic(sentence);
@@ -396,8 +447,14 @@ library Entry {
   /**
    * @notice Set the full data using individual values.
    */
-  function _set(bytes32 key, bytes32 parent, address proposer, string memory sentence) internal {
-    bytes memory _staticData = encodeStatic(parent, proposer);
+  function _set(
+    bytes32 key,
+    bytes32 parent,
+    address proposer,
+    uint256 proposedOnBlock,
+    string memory sentence
+  ) internal {
+    bytes memory _staticData = encodeStatic(parent, proposer, proposedOnBlock);
 
     PackedCounter _encodedLengths = encodeLengths(sentence);
     bytes memory _dynamicData = encodeDynamic(sentence);
@@ -412,7 +469,7 @@ library Entry {
    * @notice Set the full data using the data struct.
    */
   function set(bytes32 key, EntryData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.parent, _table.proposer);
+    bytes memory _staticData = encodeStatic(_table.parent, _table.proposer, _table.proposedOnBlock);
 
     PackedCounter _encodedLengths = encodeLengths(_table.sentence);
     bytes memory _dynamicData = encodeDynamic(_table.sentence);
@@ -427,7 +484,7 @@ library Entry {
    * @notice Set the full data using the data struct.
    */
   function _set(bytes32 key, EntryData memory _table) internal {
-    bytes memory _staticData = encodeStatic(_table.parent, _table.proposer);
+    bytes memory _staticData = encodeStatic(_table.parent, _table.proposer, _table.proposedOnBlock);
 
     PackedCounter _encodedLengths = encodeLengths(_table.sentence);
     bytes memory _dynamicData = encodeDynamic(_table.sentence);
@@ -441,10 +498,14 @@ library Entry {
   /**
    * @notice Decode the tightly packed blob of static data using this table's field layout.
    */
-  function decodeStatic(bytes memory _blob) internal pure returns (bytes32 parent, address proposer) {
+  function decodeStatic(
+    bytes memory _blob
+  ) internal pure returns (bytes32 parent, address proposer, uint256 proposedOnBlock) {
     parent = (Bytes.slice32(_blob, 0));
 
     proposer = (address(Bytes.slice20(_blob, 32)));
+
+    proposedOnBlock = (uint256(Bytes.slice32(_blob, 52)));
   }
 
   /**
@@ -473,7 +534,7 @@ library Entry {
     PackedCounter _encodedLengths,
     bytes memory _dynamicData
   ) internal pure returns (EntryData memory _table) {
-    (_table.parent, _table.proposer) = decodeStatic(_staticData);
+    (_table.parent, _table.proposer, _table.proposedOnBlock) = decodeStatic(_staticData);
 
     (_table.sentence) = decodeDynamic(_encodedLengths, _dynamicData);
   }
@@ -502,8 +563,12 @@ library Entry {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(bytes32 parent, address proposer) internal pure returns (bytes memory) {
-    return abi.encodePacked(parent, proposer);
+  function encodeStatic(
+    bytes32 parent,
+    address proposer,
+    uint256 proposedOnBlock
+  ) internal pure returns (bytes memory) {
+    return abi.encodePacked(parent, proposer, proposedOnBlock);
   }
 
   /**
@@ -534,9 +599,10 @@ library Entry {
   function encode(
     bytes32 parent,
     address proposer,
+    uint256 proposedOnBlock,
     string memory sentence
   ) internal pure returns (bytes memory, PackedCounter, bytes memory) {
-    bytes memory _staticData = encodeStatic(parent, proposer);
+    bytes memory _staticData = encodeStatic(parent, proposer, proposedOnBlock);
 
     PackedCounter _encodedLengths = encodeLengths(sentence);
     bytes memory _dynamicData = encodeDynamic(sentence);

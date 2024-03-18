@@ -27,7 +27,6 @@ contract SpawnSystemTest is MudTest {
     vm.stopPrank();
 
     assertEq(Name.get(playerEntity), "alice");
-    assertEq(Counter.get(playerEntity), 0);
   }
 
   function testRevertNoName() public {
