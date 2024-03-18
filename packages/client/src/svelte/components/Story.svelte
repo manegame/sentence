@@ -79,11 +79,8 @@
     justify-content: start;
     align-items: start;
     gap: 1rem;
-    padding: 0 1rem;
+    padding: 0 9rem 1rem  1rem;
     overflow-x: scroll;
-    /* position: fixed; */
-    /* top: 50%; */
-    /* transform: translate(0, -75px); */
     width: 100vw;
   }
 

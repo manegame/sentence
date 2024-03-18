@@ -30,9 +30,9 @@
       </div>
 
       {#if $transactionState === TransactionState.READY}
-        <button on:click={makeProposal} class="propose" />
+        <button on:click={makeProposal} class="propose propose-light" />
       {:else}
-        <button on:click={makeProposal} class="propose" />
+        <button class="propose propose-thinking" />
       {/if}
     </div>
   </div>

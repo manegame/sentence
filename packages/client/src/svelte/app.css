@@ -59,6 +59,21 @@ textarea {
   transform: translate(0, -0.5rem);
 }
 
+.propose-light,
+.count-light {
+  color: var(--grey-1);
+}
+
+.count-thinking,
+.propose-thinking {
+  animation:  blink infinite alternate 0.5s ease;
+}
+
+.count-thinking-reverse,
+.propose-thinking-reverse {
+  animation:  blink infinite alternate reverse 0.5s ease;
+}
+
 .propose::after {
   content: "+";
 }
@@ -69,4 +84,9 @@ textarea {
 .byline {
   display: inline-block;
   padding: 0.5rem 0;
+}
+
+@keyframes blink {
+  from {color: var(--grey-1);}
+  to {color: var(--grey-2);}
 }

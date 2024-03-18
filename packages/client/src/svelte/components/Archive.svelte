@@ -5,6 +5,11 @@
 </script>
 
 <div class="drawer" class:open={$url.hash === "#archive"}>
+  {#if Object.keys($archive).length === 0}
+    <small class="spoiler">
+      Imagine something here...
+    </small>
+  {/if}
   {#each Object.entries($archive) as [address, story]}
     <Story archive {address} {story} />
   {/each}
@@ -15,7 +20,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: calc(100vw - 9rem);
     height: 100vh;
     overflow-y: scroll;
     padding-right: 10rem;
@@ -29,5 +34,11 @@
 
   .drawer.open {
     transform: translate(0, 0);
+  }
+
+  .spoiler {
+    display: block;
+    padding: 1rem;
+    color: var(--grey-2);
   }
 </style>

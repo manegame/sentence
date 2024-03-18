@@ -48,7 +48,7 @@
             <button class="count" on:click={() => countVotes([$latestStory[0]])}
             ></button>
           {:else}
-            <div class="thinkin">...</div>
+            <button class="count count-thinking count-reverse"></button>
           {/if}
         </div>
       </div>
@@ -57,9 +57,12 @@
       <div class="square">
         <div class="square">
           {#if $createStoryState === TransactionState.READY}
-            <button on:click={() => createStory()} class="propose" />
+            <button on:click={async () => {
+              await createStory()
+              window.location = "#"
+            }} class="propose" />
           {:else}
-            <div class="thinkin">...</div>
+            <button class="propose propose-thinking propose-reverse"></button>
           {/if}
         </div>
       </div>
