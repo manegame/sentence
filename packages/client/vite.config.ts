@@ -1,28 +1,32 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite"
+import { svelte } from "@sveltejs/vite-plugin-svelte"
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [svelte()],
+  publicDir: "./src/svelte/public",
   server: {
-    port: 3000,
+    port: 5173,
     fs: {
       strict: false,
     },
+    headers: {
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
+    },
   },
   optimizeDeps: {
+    // exclude: ["lodash"],
     esbuildOptions: {
       target: "es2022",
     },
   },
   build: {
-    rollupOptions: {
-      // TODO: revisit this config after splitting out mud config dependencies
-      // from the cli package so we don't need to bundle the cli package
-      external: ["chalk", "locate-path", "path-exists", "find-up"],
-    },
     target: "es2022",
+    minify: true,
+    sourcemap: true,
   },
   define: {
     "process.env": {},
   },
-});
+})
