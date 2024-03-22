@@ -3,7 +3,7 @@ import { mudConfig, resolveTableId } from "@latticexyz/world/register";
 export default mudConfig({
   deploysDirectory: "./deploys",
   overrideSystems: {
-    ProposeEntrySystem: {
+    ProposalsSystem: {
       fileSelector: "proposalssystem",
       openAccess: true,
     },

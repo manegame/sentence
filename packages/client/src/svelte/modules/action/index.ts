@@ -11,7 +11,7 @@ export function spawn(name: string) {
 export enum WorldFunctions {
   Spawn = "mud_SpawnSystem_spawn",
   CreateStory = "mud_FirstEntrySystem_createStory",
-  Propose = "mud_ProposeEntrySyst_proposeEntry",
-  Vote = "mud_ProposeEntrySyst_vote",
-  CountVotes = "mud_ProposeEntrySyst_countVotes"
+  Propose = "mud_ProposalsSystem_proposeEntry",
+  Vote = "mud_ProposalsSystem_vote",
+  CountVotes = "mud_ProposalsSystem_countVotes"
 }

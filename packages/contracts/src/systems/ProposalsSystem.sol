@@ -15,7 +15,7 @@ bytes32 constant SingletonKey = bytes32(uint256(0x060D));
 uint256 constant proposalPeriod = 20;
 uint256 constant votingPeriod = 20;
 
-contract ProposeEntrySystem is System {
+contract ProposalsSystem is System {
   function proposeEntry(bytes32 parentKey, string memory entry) public returns (string memory) {
     address owner = _msgSender(); // IMPORTANT: always refer to the msg.sender using the _msgSender() function
     bytes32 key = bytes32(keccak256(abi.encodePacked(block.number, owner, gasleft()))); // creating a random key for the record
